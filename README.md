@@ -22,6 +22,19 @@ This repository contains the official implementation of our CVPR 2024 paper "Cor
 We are re-implementing the MATLAB code using C++ for better efficiency. We will release it as soon as possible!
 
 
+## Citation
+If you find our work useful, please cite our paper:
+
+```bibtex
+@inproceedings{zhao2024clustereg,
+  title={Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis},
+  author={Mingyang Zhao, Jingen Jiang, Lei Ma, Shiqing Xin, Gaofeng Meng, Dong-Ming Yan},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year={2024}
+}
+```
+
+
 
 ## Acknowledgements
 This work is partially funded by the Strategic Priority Research Program of the Chinese
