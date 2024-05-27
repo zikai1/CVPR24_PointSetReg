@@ -11,7 +11,7 @@ For convenience, the repository provides both MATLAB and C++ implementations.
 
 
 ## C++
+We are re-implementing the MATLAB code using C++ for better efficiency, and we will release it as soon as possible!
 
-Please note that the code is still under maintenance.  
 
 
