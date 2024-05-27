@@ -5,7 +5,7 @@
     </tr>
 </table> -->
 
-![](./images/overview.png)
+![](./fig/CVPR_Teaser.jpg)
 This repository contains the official implementation of our CVPR 2024 paper "Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis". 
 
 - For convenience, the repository provides both **MATLAB** and **C++** implementations. 
