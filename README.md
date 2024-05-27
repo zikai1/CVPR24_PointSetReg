@@ -4,8 +4,8 @@ This repository contains the official implementation of our CVPR 2024 highlight 
 For convenience, the repository provides both MATLAB and C++ implementations. 
 
 ## MATLAB 
-- Download the directory matlab_code.
-- Start MATLAB and run "test_demo.m" 
+- Download the directory "matlab_code".
+- Start MATLAB and run "test_demo.m".
 
 
 ## C++
