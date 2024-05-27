@@ -1,7 +1,8 @@
 # CVPR24_PointSetReg
 This repository contains the official implementation of our CVPR 2024 highlight paper "Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis". 
 
-For convenience, the repository provides both MATLAB and C++ implementations. The MATLAB implementation is extremely simple, while C++ implementation is much faster. 
+For convenience, the repository provides both MATLAB and C++ implementations. 
+-The MATLAB implementation is extremely simple, while C++ implementation is much faster. 
 
 ## MATLAB 
 - Step 1: Download the directory "matlab_code", which contains data normalization, registration, and denormalization implementations. 
