@@ -11,7 +11,6 @@
 %Output:
 % Ktilde: approximation of kernel matrix K, in the form of GG'
 
-% function Ktilde = INys(kernel,data, m, s);
 function G = INys(kernel,data, m, s)
 
 
