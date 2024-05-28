@@ -21,7 +21,7 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
                 2 * src_pt.colwise().sum() * tar_pt.colwise().sum().transpose()) / (nb_src * nb_tar * dim);
 
     double theta = 0.5;
-    Base::Kernel kernel = {"rbf", theta};
+    Base::Kernel kernel = {"rbf_l1", theta};
 
     double m = ceil(0.3 * nb_src);
     Eigen::MatrixXd Q;

@@ -9,7 +9,9 @@
 #include "base.h"
 #include "INys.h"
 #include "fuzzy_cluster_reg.h"
+#include <chrono>
 
+#include <armadillo>
 
 //void fuzzy_cluster_reg(Eigen::MatrixXd& src, Eigen::MatrixXd& tar,
 //                       double lamdba = 0.1, double beta = 0.5,
@@ -65,7 +67,28 @@
 //
 //}
 int main() {
-    Eigen::MatrixXd a, b;
+    int max_threads = omp_get_max_threads();
+    std::cout << max_threads << std::endl;
+//    Eigen::setNbThreads(max_threads);
+//    omp_set_num_threads(5);
+//    Eigen::MatrixXd a, b, res1, res2;
+//    a.resize(10000, 3);
+//    a.setOnes();
+//    b.resize(10000, 3);
+//    b.setOnes();
+//    auto start = std::chrono::high_resolution_clock::now();
+//    pdist_cityblock_omp(a, b, res1);
+//    auto end = std::chrono::high_resolution_clock::now();
+//    std::chrono::duration<double> duration = end - start;
+//    std::cout << "time: " << duration.count() << " s" << std::endl;
+
+//    start = std::chrono::high_resolution_clock::now();
+//    pdist2_cityblock_matrix(a, b, res2);
+//    end = std::chrono::high_resolution_clock::now();
+//    duration = end - start;
+//    std::cout << "time: " << duration.count() << " s" << std::endl;
+
+//    return 0;
 //    a.resize(1, 3);
 //    a << 1, 2, 3;
 //    b.resize(2, 3);
