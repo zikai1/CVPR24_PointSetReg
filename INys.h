@@ -29,7 +29,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     Eigen::VectorXi idx;
     Eigen::MatrixXd center;
     if(state == "k") {
-        eff_kmeans(data, 5, idx, center, m);
+        kmeans(data, 5, idx, center, m);
     }
     else if(state == "r") {
         Eigen::VectorXi dex;
@@ -44,7 +44,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
         W = W.array().pow(kernel.para_);
         E = E.array().pow(kernel.para_);
     }
-
+    std::cout << "ASD" <<std::endl;
     if(kernel.type_ == "rbf") {
         Eigen::MatrixXd res;
         sqdist(center, center, res);
@@ -67,11 +67,13 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
 //        pdist2_cityblock(data, center, res);
 //        E = (-res / kernel.para_).array().exp();
 //    }
+//    Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(W);
     Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(W);
     if (eigensolver.info() != Eigen::Success) {
         std::cerr << "EigenSolver failed" << std::endl;
         return;
     }
+    std::cout << "ASD" << std::endl;
     Eigen::VectorXd va = eigensolver.eigenvalues().real();
     Eigen::MatrixXd ve = eigensolver.eigenvectors().real();
     Eigen::VectorXi pidx;

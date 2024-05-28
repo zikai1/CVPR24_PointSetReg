@@ -13,8 +13,8 @@ addpath('./utils/');
 
 
 % File root
-src="./data/tr_reg_059.ply";
-tgt="./data/tr_reg_057.ply";
+src="../data/tr_reg_059.ply";
+tgt="../data/tr_reg_057.ply";
 
 
 src=pcread(src);
@@ -35,10 +35,10 @@ tgt_pt=tgt.Location;
 src_pt_normal=pointCloud(src_pt_normal);
 tgt_pt_normal=pointCloud(tgt_pt_normal);
 
-gridStep=0.03; 
-
-src_pt_normal=pcdownsample(src_pt_normal,'gridAverage',gridStep); 
-tgt_pt_normal=pcdownsample(tgt_pt_normal,'gridAverage',gridStep);
+% gridStep=0.03; 
+% 
+% src_pt_normal=pcdownsample(src_pt_normal,'gridAverage',gridStep); 
+% tgt_pt_normal=pcdownsample(tgt_pt_normal,'gridAverage',gridStep);
 
 src_pt_normal=double(src_pt_normal.Location);
 tgt_pt_normal=double(tgt_pt_normal.Location);
