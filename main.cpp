@@ -11,7 +11,7 @@
 #include "fuzzy_cluster_reg.h"
 #include <chrono>
 
-#include <armadillo>
+//#include <armadillo>
 
 //void fuzzy_cluster_reg(Eigen::MatrixXd& src, Eigen::MatrixXd& tar,
 //                       double lamdba = 0.1, double beta = 0.5,

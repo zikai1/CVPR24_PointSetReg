@@ -17,10 +17,6 @@
 
 #include <Eigen/Eigenvalues>
 
-#include <Spectra/SymEigsSolver.h>
-#include <Spectra/SymEigsShiftSolver.h>
-#include <Spectra/MatOp/DenseSymMatProd.h>
-#include <Spectra/MatOp/DenseSymShiftSolve.h>
 
 
 void pdist_cityblock_omp(const Eigen::MatrixXd& a, const Eigen::MatrixXd& b, Eigen::MatrixXd& res){
@@ -101,17 +97,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     start = std::chrono::high_resolution_clock::now();
     int ss = W.rows();
     std::cout << ss << std::endl;
-    Spectra::DenseSymMatProd<double> op(W);
 
-    Spectra::SymEigsSolver< Spectra::DenseSymMatProd<double>> eigs(op, ss, ss+1);
-    eigs.init();
-    int nconv = eigs.compute(Spectra::SortRule::LargestMagn, 1000, 1e-15, Spectra::SortRule::SmallestAlge);
-    int niter = eigs.num_iterations();
-    int nops = eigs.num_operations();
-    end = std::chrono::high_resolution_clock::now();
-    duration = end - start;
-    std::cout << "Spectra Eigenvalue decomposition time: " << duration.count() << " s" << std::endl;
-    std::cout << "niter =" <<niter<< std::endl;
 
     start = std::chrono::high_resolution_clock::now();
     std::unique_ptr<matlab::engine::MATLABEngine> matlabPtr = matlab::engine::startMATLAB();
