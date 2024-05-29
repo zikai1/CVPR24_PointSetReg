@@ -4,6 +4,19 @@
 using namespace matlab::engine;
 using namespace matlab::data;
 std::unique_ptr<MATLABEngine> matlabPtr = startMATLAB();
+
+matlab::data::TypedArray<double> eigenToMatlab(Eigen::MatrixXd& eigenMat) {
+    matlab::data::ArrayFactory factory;
+    auto matlabArray = factory.createArray<double>({(size_t)eigenMat.rows(), (size_t)eigenMat.cols()});
+    for (Eigen::Index i = 0; i < eigenMat.rows(); ++i) {
+        for (Eigen::Index j = 0; j < eigenMat.cols(); ++j) {
+            matlabArray[i][j] = eigenMat(i, j);
+        }
+    }
+    return matlabArray;
+}
+
+
 int main() {
 
 

@@ -6,14 +6,14 @@
 #define FUZZYNONRIGID_INYS_H
 #include <cmath>
 #include "iostream"
-#include "eff_kmeans.h"
+#include "kmeans.h"
 #include <omp.h>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
-#include <MatlabEngine.hpp>
-#include <MatlabDataArray.hpp>
+//#include <MatlabEngine.hpp>
+//#include <MatlabDataArray.hpp>
 
 #include <Eigen/Eigenvalues>
 
@@ -43,16 +43,7 @@ void pdist2_cityblock_matrix(const Eigen::MatrixXd& a, const Eigen::MatrixXd& b,
 }
 
 
-matlab::data::TypedArray<double> eigenToMatlab(Eigen::MatrixXd& eigenMat) {
-    matlab::data::ArrayFactory factory;
-    auto matlabArray = factory.createArray<double>({(size_t)eigenMat.rows(), (size_t)eigenMat.cols()});
-    for (Eigen::Index i = 0; i < eigenMat.rows(); ++i) {
-        for (Eigen::Index j = 0; j < eigenMat.cols(); ++j) {
-            matlabArray[i][j] = eigenMat(i, j);
-        }
-    }
-    return matlabArray;
-}
+
 
 void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
                                              Eigen::MatrixXd& data,
@@ -62,14 +53,22 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     size_t num = data.rows(), dim = data.cols();
     Eigen::VectorXi idx;
     Eigen::MatrixXd center;
-    if(state == "k") {
-        kmeans(data, 5, idx, center, m);
-    }
-    else if(state == "r") {
-        Eigen::VectorXi dex;
-        igl::randperm(num, dex);
-        center = data(dex.segment(0, m), Eigen::all);
-    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+//    kmeans(data, 5, idx, center, m);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+//    std::cout << "kmeans time: " << duration.count() << " s" << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
+
+    elkan_kmeans(data, 5, idx, center, m);
+
+    end = std::chrono::high_resolution_clock::now();
+    duration = end - start;
+    std::cout << "elkan_kmeans time: " << duration.count() << " s" << std::endl;
+
 
     Eigen::MatrixXd W, E;
 
@@ -82,57 +81,41 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     }
 
 
-    auto start = std::chrono::high_resolution_clock::now();
+    start = std::chrono::high_resolution_clock::now();
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigensolver(W);
-//    eigensolver.compute(W);
     if (eigensolver.info() != Eigen::Success) {
         std::cerr << "EigenSolver failed" << std::endl;
         return;
     }
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double>  duration = end - start;
-    std::cout << "Eigen Eigenvalue decomposition time: " << duration.count() << " s" << std::endl;
-
-    start = std::chrono::high_resolution_clock::now();
-    int ss = W.rows();
-    std::cout << ss << std::endl;
-
-
-    start = std::chrono::high_resolution_clock::now();
-    std::unique_ptr<matlab::engine::MATLABEngine> matlabPtr = matlab::engine::startMATLAB();
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
-    std::cout << "StartMATLAB time: " << duration.count() << " s" << std::endl;
-    matlab::data::TypedArray<double> matlabArray = eigenToMatlab(W);
+    std::cout << "EigenSolver time: " << duration.count() << " s" << std::endl;
 
 
-    start = std::chrono::high_resolution_clock::now();
-    matlabPtr->setVariable(u"A", std::move(matlabArray));
-    matlabPtr->eval(u"[V, D] = eig(A);");
-    end = std::chrono::high_resolution_clock::now();
-    duration = end - start;
-    std::cout << "Matlab Eigenvalue decomposition time: " << duration.count() << " s" << std::endl;
 
     Eigen::VectorXd va = eigensolver.eigenvalues().real();
-    std::cout << va.size() <<std::endl;
     Eigen::MatrixXd ve = eigensolver.eigenvectors().real();
-    duration = end - start;
-//    std::cout << "time: " << duration.count() << " s" << std::endl;
-//    for(int i = 0; i < va.size(); i++) {
-//        std::cout << va[i] <<std::endl;
-//    }
+
+
     Eigen::VectorXi pidx;
+
     igl::find((va.array() > 1e-6).eval(), pidx);
+
     int nb_pidx = pidx.size();
     std::vector<Eigen::Triplet<double>> triplets(nb_pidx);
     Eigen::SparseMatrix<double> inVa(nb_pidx, nb_pidx);
+
     #pragma omp parallel for
     for(int i = 0; i < nb_pidx; i++) {
         triplets[i] = Eigen::Triplet<double>(i, i, std::pow(va[pidx[i]], -0.5));
     }
+    inVa.setFromTriplets(triplets.begin(),triplets.end());
 
+    start = std::chrono::high_resolution_clock::now();
     G = E * ve(Eigen::all, pidx) * inVa;
+    end = std::chrono::high_resolution_clock::now();
+    duration = end - start;
+    std::cout << "Easd time: " << duration.count() << " s" << std::endl;
 }
 
 #endif //FUZZYNONRIGID_INYS_H

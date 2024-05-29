@@ -34,12 +34,13 @@ theta=0.5;
 
 % Low-rank matrix approximation of the Laplacian kernel
 kernel = struct('type', 'rbf', 'para', theta); 
-
+tic
 % Number of landmark points, the larger the slower but more accurate
 m=ceil(0.3*Nc);
 Q = INys(kernel,src_pt, m, 'k');
 c=size(Q,2);
-
+elapsedTime = toc;
+fprintf('Elapsed time is %.2f seconds.\n', elapsedTime);
 
 % Parameter initialization 
 W=zeros(Nc,D);

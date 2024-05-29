@@ -11,6 +11,7 @@
 #include "fuzzy_cluster_reg.h"
 #include <chrono>
 
+#include <mkl.h>
 //#include <armadillo>
 
 //void fuzzy_cluster_reg(Eigen::MatrixXd& src, Eigen::MatrixXd& tar,
@@ -67,10 +68,11 @@
 //
 //}
 int main() {
-    int max_threads = omp_get_max_threads();
-    std::cout << max_threads << std::endl;
+//    int max_threads = omp_get_max_threads();
+//    std::cout << max_threads << std::endl;
 //    Eigen::setNbThreads(max_threads);
-//    omp_set_num_threads(5);
+    omp_set_num_threads(10);
+    mkl_set_num_threads(10);
 //    Eigen::MatrixXd a, b, res1, res2;
 //    a.resize(10000, 3);
 //    a.setOnes();
@@ -109,8 +111,12 @@ int main() {
     Base::PointSet tar(tar_points);
     Eigen::VectorXd alpha;
     Base::PointSet res;
-    fuzzy_cluster_reg(src, tar, alpha, res);
 
+    auto start = std::chrono::high_resolution_clock::now();
+    fuzzy_cluster_reg(src, tar, alpha, res);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "fuzzy_cluster_reg time: " << duration.count() << " s" << std::endl;
 //    Eigen::MatrixXd tar(1, 3);
 //    tar <<  1,2,3;
 ////    fuzzy_cluster_reg(src, tar);
