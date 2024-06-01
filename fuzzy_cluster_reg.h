@@ -27,11 +27,18 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
     Eigen::MatrixXd Q;
     auto start = std::chrono::high_resolution_clock::now();
 
-    improved_nystrom_low_rank_approximation(kernel, src_pt, "k", m, Q);
+    improved_nystrom_low_rank_approximation(kernel, src_pt, m, Q);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "rank_approximation time: " << duration.count() << " s" << std::endl;
-//    std::cout << Q.rows() << ' ' << Q.cols() << std::endl;
+
+    Eigen::MatrixXd W = Eigen::MatrixXd::Zero(nb_src, dim);
+    int iter = 0,maxNumIter = 50;
+    double tol = 1e-5, ntol = tol + 10, loss = 1;
+    Eigen::MatrixXd T = src_pt;
+    Eigen::MatrixXd F = tar_pt;
+    Eigen::MatrixXd FT = F.transpose();
+
 }
 
 #endif //FUZZYNONRIGID_FUZZY_CLUSTER_REG_H

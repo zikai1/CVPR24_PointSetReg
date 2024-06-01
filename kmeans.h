@@ -58,7 +58,7 @@ void kmeans(Eigen::MatrixXd& data, int max_iter,
     Eigen::VectorXi dex;
     igl::randperm(num, dex);
     center = data(dex.segment(0, m), Eigen::all);
-    std::cout << max_iter << std::endl;
+//    std::cout << max_iter << std::endl;
     for(int i = 0; i < max_iter; i++) {
         Eigen::VectorXd ct = Eigen::VectorXd::Zero(m);
         Eigen::MatrixXd tmp;
@@ -90,8 +90,9 @@ void elkan_kmeans(Eigen::MatrixXd& data, int max_iter,
     igl::randperm(num, dex);
     center = data(dex.segment(0, m), Eigen::all);
     Eigen::VectorXd tmp(m);
-    Eigen::VectorXi clust(num); clust.setConstant(-1);
-    Eigen::VectorXi clust_size(m);
+    idx.resize(num);
+    idx.setConstant(-1);
+    Eigen::VectorXi clust_size(m); clust_size.setZero();
     Eigen::MatrixXd center_sum(center.rows(), center.cols());
     center_sum.setZero();
 
@@ -111,7 +112,7 @@ void elkan_kmeans(Eigen::MatrixXd& data, int max_iter,
 //        clust_size.setZero();
         #pragma omp parallel for collapse(2)
         for (int i = 0; i < num; i++) {
-            if(clust[i] == -1) {
+            if(idx[i] == -1) {
                 double minn = std::numeric_limits<double>::max();
                 int id = 0;
                 for(int j = 0; j < m; j++) {
@@ -121,13 +122,13 @@ void elkan_kmeans(Eigen::MatrixXd& data, int max_iter,
                         if(2 * dis < tmp[j]) break;
                     }
                 }
-                clust[i] = id;
+                idx[i] = id;
                 clust_size[id]++;
                 center_sum.row(id) += data.row(i);
             }
             else {
-                double dis = (data.row(i) - center.row(clust[i])).squaredNorm();
-                if(2 * dis <= tmp[clust[i]]) {
+                double dis = (data.row(i) - center.row(idx[i])).squaredNorm();
+                if(2 * dis <= tmp[idx[i]]) {
                     continue;
                 } else {
                     double minn = std::numeric_limits<double>::max();
@@ -139,20 +140,20 @@ void elkan_kmeans(Eigen::MatrixXd& data, int max_iter,
                             if(2 * dis <= tmp[j]) break;
                         }
                     }
-                    clust_size[clust[i]]--;
-                    center_sum.row(clust[i]) -= data.row(i);
+                    clust_size[idx[i]]--;
+                    center_sum.row(idx[i]) -= data.row(i);
 
-                    clust[i] = id;
-                    clust_size[clust[i]]++;
-                    center_sum.row(clust[i]) += data.row(i);
+                    idx[i] = id;
+                    clust_size[idx[i]]++;
+                    center_sum.row(idx[i]) += data.row(i);
                 }
             }
-
         }
 
         #pragma omp parallel for
         for(int i = 0; i < m; i++) {
             center.row(i) = center_sum.row(i) / clust_size[i];
+//            std::cout << center_sum.row(i) << ' ' << clust_size[i] << std::endl;
         }
     }
 }
