@@ -79,7 +79,7 @@ NEAR_0=1e-10; % avoid logx->-inf and NaN
 
 figure;
 while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
-
+    
     Loss_old=Loss;
     
     QtW=Q'*W;

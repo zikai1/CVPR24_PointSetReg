@@ -74,28 +74,15 @@ int main() {
     omp_set_num_threads(10);
     mkl_set_num_threads(10);
 //    Eigen::MatrixXd a, b, res1, res2;
-//    a.resize(10000, 3);
-//    a.setOnes();
-//    b.resize(10000, 3);
-//    b.setOnes();
-//    auto start = std::chrono::high_resolution_clock::now();
-//    pdist_cityblock_omp(a, b, res1);
-//    auto end = std::chrono::high_resolution_clock::now();
-//    std::chrono::duration<double> duration = end - start;
-//    std::cout << "time: " << duration.count() << " s" << std::endl;
-
-//    start = std::chrono::high_resolution_clock::now();
-//    pdist2_cityblock_matrix(a, b, res2);
-//    end = std::chrono::high_resolution_clock::now();
-//    duration = end - start;
-//    std::cout << "time: " << duration.count() << " s" << std::endl;
-
-//    return 0;
-//    a.resize(1, 3);
-//    a << 1, 2, 3;
-//    b.resize(2, 3);
+////    return 0;
+////    a.resize(1, 3);
+////    a << 1, 2, 3;
+//    b.resize(3, 3);
 //    b << 2, 3, 4,
-//         5, 6, 7;
+//         5, 6, 7,
+//         8,9,10;
+//    std::cout << b.diagonal() << std::endl;
+//    return 0;
 //    Eigen::MatrixXd ss;
 //    sqdist(a, b, ss);
 //    std::cout << ss << std::endl;
@@ -109,7 +96,7 @@ int main() {
 
     Base::PointSet src(src_points);
     Base::PointSet tar(tar_points);
-    Eigen::VectorXd alpha;
+    Eigen::RowVectorXd alpha;
     Base::PointSet res;
 
     auto start = std::chrono::high_resolution_clock::now();

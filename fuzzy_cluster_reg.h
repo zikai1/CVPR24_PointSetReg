@@ -10,7 +10,7 @@
 #define FUZZYNONRIGID_FUZZY_CLUSTER_REG_H
 
 void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
-                       Eigen::VectorXd& alpha, Base::PointSet& res) {
+                       Eigen::RowVectorXd& alpha, Base::PointSet& res) {
     int nb_src = src.nb_points_;
     int nb_tar = tar.nb_points_;
     int dim = src.dim_;
@@ -38,6 +38,86 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
     Eigen::MatrixXd T = src_pt;
     Eigen::MatrixXd F = tar_pt;
     Eigen::MatrixXd FT = F.transpose();
+    Eigen::MatrixXd FF = FT.array().square().colwise().sum();
+
+    double beta = 0.5, lamdba = 0.1;
+
+    alpha = Eigen::RowVectorXd::Ones(nb_src);
+    Eigen::VectorXd onesUy = Eigen::VectorXd::Ones(nb_src);
+    Eigen::VectorXd onesUx = Eigen::VectorXd::Ones(nb_tar);
+
+    size_t c = Q.cols();
+    Eigen::MatrixXd IdentMatrix = Eigen::MatrixXd::Identity(c, c);
+
+    double eps = 1e-10;
+
+    while(ntol > tol && iter < maxNumIter && sigma2 > 1e-8) {
+        std::cout << loss << std::endl;
+        double loss_old = loss;
+        Eigen::MatrixXd QtW = Q.transpose() * W;
+        Eigen::MatrixXd fuzzy_dis;
+        sqdist_omp(F, T, fuzzy_dis);
+        fuzzy_dis = (-fuzzy_dis / (sigma2 * beta)).array().exp().array().rowwise() * alpha.array();
+//        std::cout << fuzzy_dis.rows() << ' ' << fuzzy_dis.cols() << std::endl;
+
+        Eigen::VectorXd sum_fuzzy_dist = 1.0 / fuzzy_dis.rowwise().sum().array();
+//        std::cout << sum_fuzzy_dist.rows() << ' ' << sum_fuzzy_dist.cols() << std::endl;
+        Eigen::MatrixXd U = fuzzy_dis.array() * sum_fuzzy_dist.array();
+        U = U.array() + eps;
+        Eigen::MatrixXd logU = U.array().log();
+        alpha = U.colwise().sum() / nb_tar;
+
+        alpha = alpha.array() + eps;
+        Eigen::RowVectorXd log_alpha = alpha.array().log();
+
+        Eigen::MatrixXd U1 = U * onesUy;
+
+        Eigen::MatrixXd Ut1 = U.transpose() * onesUx;
+
+        Eigen::DiagonalMatrix<double, Eigen::Dynamic> dU(U1.diagonal());
+        Eigen::DiagonalMatrix<double, Eigen::Dynamic> dUt(Ut1.diagonal());
+
+        Eigen::SparseMatrix<double> dUtQ = (dUt * Q).sparseView();
+        Eigen::MatrixXd Uttgt = U.transpose() * tar_pt;
+
+        Eigen::MatrixXd P = Uttgt - dUt * src_pt;
+//        std::cout << Q.transpose()
+        Eigen::SparseMatrix<double> A = (lamdba * sigma2 * IdentMatrix + Q.transpose() * dUtQ).sparseView();
+        Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
+        solver.compute(A);
+
+        if (solver.info() != Eigen::Success) {
+            std::cerr << "Decomposition failed" << std::endl;
+        }
+
+        // 构建单位矩阵 I
+        Eigen::SparseMatrix<double> I(A.rows(), A.cols());
+        I.setIdentity();
+
+        // 计算稀疏矩阵 A 的逆
+        Eigen::MatrixXd AinvQ = solver.solve(Q.transpose());
+        std::cout <<  iter << std::endl;
+//        std::cout << A.rows() << ' ' << A.cols() << std::endl;
+        W = 1.0 / (lamdba * sigma2) * (P - dUtQ * (AinvQ * P));
+
+        double wdist_pt2center = fabs((FT * dU * F + T.transpose() * dUt * T - 2 * Uttgt.transpose() * T).trace());
+        std::cout << wdist_pt2center << std::endl;
+        double H_U = (U.array() * logU.array()).sum();
+        double H_alpha = nb_tar * alpha * log_alpha.transpose();
+        double KL_U_alpha = H_U - H_alpha;
+
+        loss = (1.0 / sigma2) * wdist_pt2center + nb_tar * dim * log(sigma2) +
+               lamdba / 2 * (QtW.transpose() * QtW).trace()
+               + beta * KL_U_alpha;
+        ntol = abs((loss - loss_old) / loss);
+
+        T = src_pt + Q * (Q.transpose() * W);
+
+        sigma2 = wdist_pt2center / (nb_tar * dim);
+        std::cout <<  iter << std::endl;
+//        break;
+        iter++;
+    }
 
 }
 
