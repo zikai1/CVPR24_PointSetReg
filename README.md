@@ -1,4 +1,25 @@
-<font size=15> Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (Highlight) <font size=15>
+<p align="center">
+  <p align="center">
+    <h1 align="center">Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (Highlight)</h1>
+  </p>
+  <p align="center" style="font-size:16px">
+    <a target="_blank" href="https://zikai1.github.io/"><strong>Mingyang Zhao</strong></a>
+    ·
+    <a target="_blank" href="https://xiaowuga.github.io/"><strong>Jingen Jiang</strong></a>
+    ·
+    <a target="_blank" href="https://www.ai.pku.edu.cn/info/1139/1341.htm"><strong>Lei Ma</strong></a>
+    ·
+    <a target="_blank" href="https://irc.cs.sdu.edu.cn/~shiqing/index.html"><strong>Shiqing Xin</strong></a>
+    ·
+    <a target="_blank" href="https://scholar.google.com/citations?user=5hti_r0AAAAJ"><strong>Gaofeng Meng</strong></a>
+   ·
+    <a target="_blank" href="https://sites.google.com/site/yandongming/"><strong>Dong-Ming Yan</strong></a>
+  </p>
+
+
+
+
+<!--<font size=15> Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (Highlight) <font size=15>-->
 
 ![](./fig/CVPR_Teaser.jpg)
 This repository contains the official implementation of our CVPR 2024 paper "Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis". 
