@@ -3,50 +3,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-	<title>Laplacian2Mesh: Laplacian-Based Mesh Understanding</title>
+	<title>P2M: A Fast Solver for Querying Distance from Point to Mesh Surface</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+	<link rel="icon" href="./images/QQ图片20220912112705.jpg" sizes="64x64" type="image/png">
 
 	<!-- Meta tags for Zotero grab citation -->
-	<meta name="citation_title" content="Laplacian2Mesh: Laplacian-Based Mesh Understanding">
-	<meta name="citation_author" content="Qiujie Dong">
-	<meta name="citation_author" content="Zixiong Wang">
-	<meta name="citation_author" content="Manyi Li">
-	<meta name="citation_author" content="Junjie Gao">
-	<meta name="citation_author" content="Shuangmin Chen">
-	<meta name="citation_author" content="Zhenyu Shu">
-	<meta name="citation_author" content="Shiqing Xin">
-	<meta name="citation_author" content="Changhe Tu">
-    <meta name="citation_author" content="Wenping Wang">
-	<meta name="citation_publication_date" content="2023">
-	<meta name="citation_conference_title" content="IEEE Transactions on Visualization and Computer Graphics">
-	<meta name="citation_pdf_url" content="https://doi.org/10.1109/TVCG.2023.3259044">
+<!--	<meta name="citation_title" content="P2M: A Fast Solver for Querying Distance from Point to Mesh Surface">-->
+<!--	<meta name="citation_author" content="Rui Xu">-->
+<!--	<meta name="citation_author" content="Zhiyang Dou">-->
+<!--	<meta name="citation_author" content="Ningna Wang">-->
+<!--	<meta name="citation_author" content="Chen Zong">-->
+<!--	<meta name="citation_author" content="Shiqing Xin">-->
+<!--	<meta name="citation_author" content="Mingyan Jiang">-->
+<!--	<meta name="citation_author" content="Tao Ju">-->
+<!--	<meta name="citation_author" content="Changhe Tu">-->
+<!--	<meta name="citation_publication_date" content="2022">-->
+<!--	<meta name="citation_conference_title" content="SIGGRAPH Asia">-->
+<!--	<meta name="citation_pdf_url" content="https://arxiv.org/abs/2212.03600">-->
 
 	<meta name="robots" content="index,follow">
 	<meta name="description"
-		content="Geometric deep learning has sparked a rising interest in computer graphics to perform shape understanding tasks,
-		such as shape classification and semantic segmentation. When the input is a polygonal surface,
-		one has to suffer from the irregular mesh structure. Motivated by the geometric spectral theory,
-		we introduce Laplacian2Mesh, a novel and flexible convolutional neural network (CNN) framework for
-		coping with irregular triangle meshes (vertices may have any valence).
-		By mapping the input mesh surface to the multi-dimensional Laplacian-Beltrami space,
-		Laplacian2Mesh enables one to perform shape analysis tasks directly using the mature CNNs,
-		without the need to deal with the irregular connectivity of the mesh structure.
-		We further define a mesh pooling operation such that the receptive field of the network can be expanded
-		while retaining the original vertex set as well as the connections between them.
-		Besides, we introduce a channel-wise self-attention block to learn the individual importance of feature ingredients.
-		Laplacian2Mesh not only decouples the geometry from the irregular connectivity of the mesh structure
-		but also better captures the global features that are central to shape classification and segmentation.
-		Extensive tests on various datasets demonstrate the effectiveness and efficiency of Laplacian2Mesh,
-		particularly in terms of the capability of being vulnerable to noise to fulfill various learning tasks.
-		">
-    <link rel="icon" type="image/png" href="/author/icon.jpg">
+		content="
+		Feature lines are important geometric cues in characterizing the structure of a CAD model. Despite great progress in both explicit reconstruction and implicit reconstruction, it remains a challenging task to reconstruct a polygonal surface equipped with feature lines, especially when the input point cloud is noisy and lacks faithful normal vectors. In this paper, we develop a multistage algorithm, named RFEPS, to address this challenge. The key steps include (1) denoising the point cloud based on the assumption of local planarity, (2) identifying the feature-line zone by optimization of discrete optimal transport, (3) augmenting the point set so that sufficiently many additional points are generated on potential geometry edges, and (4) generating a polygonal surface that interpolates the augmented point set based on restricted power diagram. We demonstrate through extensive experiments that RFEPS, benefiting from the edge-point augmentation and the feature preserving explicit reconstruction, outperforms state of the art methods in terms of the reconstruction quality, especially in terms of the ability to reconstruct missing feature lines.">
+		<link rel="author" href="" />
+
 
 	<!-- Fonts and stuff -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,800italic,400,700,800'
 		rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="../../css/project.css" media="screen" />
-	<link rel="stylesheet" type="text/css" media="screen" href="../../css/iconize.css" />
+	<link rel="stylesheet" type="text/css" href="css/project.css" media="screen" />
+	<link rel="stylesheet" type="text/css" media="screen" href="css/iconize.css" />
 	<script src="js/google-code-prettify/prettify.js"></script>
 </head>
 
@@ -54,133 +40,119 @@
 	<div id="content">
 		<div id="content-inner">
 			<div class="section logos" style="text-align:center">
-				<a href="https://www.en.sdu.edu.cn/" target="_blank" rel="noopener"><IMG src="../Assets/logos/logo_SDU.png" height="66" border="0"></a></td>
-                <a href="https://en.qust.edu.cn/" target="_blank" rel="noopener"><IMG src="../Assets/logos/logo_QUST.png" height="66" border="0"></a></td>
-                <a href="https://www.nbt.edu.cn/" target="_blank" rel="noopener"><IMG src="../Assets/logos/logo_NBT.png" height="66" border="0"></a></td>
-                <a href="https://www.tamu.edu/" target="_blank" rel="noopener"><IMG src="../Assets/logos/logo_ATM.png" height="66" border="0"></a></td>
+				<a href="https://www.en.sdu.edu.cn/" target="_blank"><IMG src="./logos/Logo_SDU.png" height="66" border="0"></a></td>
+				<a href="https://en.qust.edu.cn/" target="_blank"><IMG src="./logos/qingke.jpg" height="66"	border="0"></a></td>
+				<a href="https://www.tamu.edu/" target="_blank"><IMG src="./logos/Logo_TAMU.png" height="66"	border="0"></a></td>
+
 			</div>
 
 			<div class="section head">
 
-				<h1>Laplacian2Mesh: Laplacian-Based Mesh Understanding</h1>
+				<h1>P2M: A Fast Solver for Querying Distance from Point to Mesh Surface</h1>
 
 				<div class="authors">
-					<a href="https://qiujiedong.github.io/" itemprop="url" rel="noopener">Qiujie Dong</a><sup> 1</sup>&#160;&#160;
-                    <a href="https://bearprin.com/" target="_blank" rel="noopener">Zixiong Wang</a><sup> 1</sup>&#160;&#160;
-                    <a href="https://manyili12345.github.io/" target="_blank" rel="noopener">Manyi Li</a><sup> 1</sup>&#160;&#160;
-                    <a href="https://scholar.google.com/citations?user=CTDs13EAAAAJ&hl" target="_blank" rel="noopener">Junjie Gao</a><sup> 1</sup>&#160;&#160;
-                    <a href="https://ieeexplore.ieee.org/author/37088955375" target="_blank" rel="noopener">Shuangmin Chen</a><sup> 2</sup>&#160;&#160;
-                    <a href="https://ieeexplore.ieee.org/author/37086874041" target="_blank" rel="noopener">Zhenyu Shu</a><sup> 3</sup>&#160;&#160;
-                    <br>
-                    <a href="http://irc.cs.sdu.edu.cn/~shiqing/index.html" target="_blank" rel="noopener">Shiqing Xin</a><sup> 1</sup>&#160;&#160;
-                    <a href="http://irc.cs.sdu.edu.cn/~chtu/index.html" target="_blank" rel="noopener">Changhe Tu</a><sup> 1</sup>&#160;&#160;
-                    <a href="https://engineering.tamu.edu/cse/profiles/Wang-Wenping.html" target="_blank" rel="noopener">Wenping Wang</a><sup> 4</sup>&#160;&#160;
+					<a href="" target="_blank">Chen Zong</a><sup> 1</sup>&#160;&#160;
+					<a href="" target="_blank">Jiacheng Xu</a><sup> 1</sup>&#160;&#160;
+					<a href="https://yuemos.github.io/" target="_blank">Jiantao Song</a><sup> 1</sup>&#160;&#160;
+					<a href="http://irc.cs.sdu.edu.cn/~shiqing/index.html" target="_blank">Shiqing Xin</a><sup> 1</sup>&#160;&#160;
+					<a href="" target="_blank">Shuangmin Chen</a><sup> 2</sup>&#160;&#160;
+					<a href="https://engineering.tamu.edu/cse/profiles/Wang-Wenping.html">Wenping Wang</a><sup> 3</sup>&#160;&#160;
+					<a href="http://irc.cs.sdu.edu.cn/~chtu/index.html">Changhe Tu</a><sup> 1</sup>&#160;&#160;
 				</div>
 
 				<div class="affiliations">
-					<sup>1</sup><a href="https://www.en.sdu.edu.cn/" target="_blank" rel="noopener">Shandong University</a>&#160;&#160;
-					<sup>2</sup><a href="https://en.qust.edu.cn/" target="_blank" rel="noopener">Qingdao University of Science and Technology</a>&#160;&#160;
-                    <br>
-					<sup>3</sup><a href="https://www.nbt.edu.cn/" target="_blank" rel="noopener">Ningbo Institute of Technology, Zhejiang University</a>&#160;&#160;
-                    <sup>4</sup><a href="https://www.tamu.edu/" target="_blank" rel="noopener">Texas A&M University</a>&#160;&#160;
+					<sup>1</sup><a href="https://www.en.sdu.edu.cn/" target="_blank">Shandong University</a>&#160;&#160;
+					<sup>2</sup><a href="https://en.qust.edu.cn/" target="_blank">Qingdao University of Science and Technology</a>&#160;&#160;<br>
+					<sup>3</sup><a href="https://www.tamu.edu/" target="_blank">Texas A&M University</a>&#160;&#160;
 				</div>
-				<div class="venue"> IEEE Transactions on Visualization and Computer Graphics</div>
+				<div class="venue"> SIGGRAPH 2023 Journal Track Conditionally Accepted. </div>
 			</div>
-			<div class="section downloads" style="text-align:center">
-				<ul style="padding-left: 0">
-					<li class="grid">
-						<div class="griditem">
-							<a href="https://ieeexplore.ieee.org/document/10076837" itemprop="url" rel="noopener"><img src="../Assets/images/TVCG.png"></a><br/>
-							<a href="https://ieeexplore.ieee.org/document/10076837" itemprop="url" rel="noopener">Paper</a>
-						</div>
-					</li>
-					<li class="grid">
-						<div class="griditem">
-							<a href="https://arxiv.org/abs/2202.00307" itemprop="url" rel="noopener"><img src="../Assets/images/arXiv.png"></a><br/>
-							<a href="https://arxiv.org/abs/2202.00307" itemprop="url" rel="noopener">arXiv</a>
-						</div>
-					</li>
-					<li class="grid">
-						<div class="griditem">
-							<a href="https://github.com/QiujieDong/Laplacian2Mesh" itemprop="url" rel="noopener"><img src="../Assets/images/github.png"></a><br/>
-							<a href="https://github.com/QiujieDong/Laplacian2Mesh" itemprop="url" rel="noopener">Code</a>
+						<div class="section downloads">
+					<center>
+						<ul style="padding-left: 0">
+							<li class="grid">
+								<div class="griditem">
+									<a href="pdf/P2M_author.pdf"><img src="images/pdf.png"></a><br/>
+									<a href="pdf/P2M_author.pdf">Paper</a>
+								</div>
+							</li><li class="grid">
+								<div class="griditem">
+									<a href="https://github.com/Martin-JC-Xu/P2M"><img src="images/data_ico.png"></a><br/>
+									<a href="https://github.com/Martin-JC-Xu/P2M">Code</a>
 
-						</div>
-					</li>
-				</ul>
-			</div>
+								</div>
+							</li></ul>
+					</center>
+				</div>
+
+
+				
+
+
+
 
 
 			<div class="section abstract">
 				<h2>Abstract</h2><br>
 				<div class="row" style="margin-bottom:5px">
 					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/spatial_transformations.png" style="width:85%; margin-bottom:20px">
+						<img class="thumbnail" src="figs/teaser.jpg" style="width:100%; margin-bottom:20px">
 					</div>
 
 				</div>
-				<p style="text-align:justify;">
-					Geometric deep learning has sparked a rising interest in computer graphics to perform shape understanding tasks,
-					such as shape classification and semantic segmentation. When the input is a polygonal surface,
-					one has to suffer from the irregular mesh structure. Motivated by the geometric spectral theory,
-					we introduce Laplacian2Mesh, a novel and flexible convolutional neural network (CNN) framework for
-					coping with irregular triangle meshes (vertices may have any valence).
-					By mapping the input mesh surface to the multi-dimensional Laplacian-Beltrami space,
-					Laplacian2Mesh enables one to perform shape analysis tasks directly using the mature CNNs,
-					without the need to deal with the irregular connectivity of the mesh structure.
-					We further define a mesh pooling operation such that the receptive field of the network can be expanded
-					while retaining the original vertex set as well as the connections between them.
-					Besides, we introduce a channel-wise self-attention block to learn the individual importance of feature ingredients.
-					Laplacian2Mesh not only decouples the geometry from the irregular connectivity of the mesh structure
-					but also better captures the global features that are central to shape classification and segmentation.
-					Extensive tests on various datasets demonstrate the effectiveness and efficiency of Laplacian2Mesh,
-					particularly in terms of the capability of being vulnerable to noise to fulfill various learning tasks.
-				</p>
+				<p>
+					Most of the prevailing point-to-mesh distance query solvers, such as Proximity Query Package (PQP)[Larsen et al.1999], Embree[Afra et al.2016] and Fast Closest Point Query (FCPW)[Sawhney 2021], are based on bounding volume hierarchy (BVH). 
+					The hierarchical organizational structure enables one to eliminate the vast majority of triangles that do not help find the closest point. 
+					In this paper, we develop a totally different algorithmic paradigm, named P2M, to speed up point-to-mesh distance queries. 
+					Our original intention is to precompute a KD tree (KDT) of mesh vertices to approximately encode the geometry of a mesh surface containing vertices, edges and faces. 
+					However, it is very likely that the closest primitive to the query point is an edge (resp., a face), but the KDT reports a mesh vertex instead. 
+					We call this mesh vertex an interceptor of the edge (resp., a face). The main contribution of this paper is to invent a simple yet effective interception inspection rule and an efficient flooding interception inspection algorithm for quickly finding out all the interception pairs. 
+					Once the KDT and the interception table are precomputed, the query stage proceeds by first searching the KDT and then looking up the interception table to retrieve the closest geometric primitive. 
+					Statistics show that our query algorithm runs many times faster than the state-of-the-art solvers.				</p>
 			</div>
 
+			<!--<div class="section abstract">
+				<h2>Full Video</h2><br>
+				<center>
+					<!-- <iframe width="640" height="360" src="data/video.mp4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+					<!--<iframe width="640" height="360" src="https://www.youtube.com/embed/RFqPwH7QFEI" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen></iframe>-->
+					<!--iframe src="./data/video.mp4" allow="autoplay; encrypted-media" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="560" height="315" frameborder="0"></iframe-->
+					<!--<p style="font-size:11px; text-align:center">
+					Download Video: <a href="data/video.mp4" target="_blank">HD</a> (MP4, 111 MB)
+				</p>
+				</center>
+			</div>-->
+
 			<div class="section abstract">
-				<h2>Introduction</h2><br>
+				<h2>Introduction</h2>
 
-				<p style="text-align:justify;">
-					In this paper, we propose Laplacian2Mesh, inheriting the spirit of those spectral approaches,
-					to make it possible to conduct learning tasks in the spectral domain when the input is a polygonal mesh.
-					Note that the main technique of spectral approaches is to encode the overall shape by a subset of the
-					eigenvectors decomposed from the Laplacian matrix of the input mesh.
-					Two reasons account for why we advocate using the new representation in deep learning.
-					First, as the low-frequency signals, given by those eigenvectors with small eigenvalues,
-					encode the overall shape, they are more semantically important than high-frequency signals for most understanding tasks.
-					It is easy for one to separate low-frequency signals from high-frequency signals in spectral approaches by setting a simple parameter k.
-					Second, the Laplacian-based spectral transform can decouple shape variations from the tedious triangulation,
-					avoiding tangling with tedious and irregular triangulations.
-					Even if the input mesh contains a limited number of defects (e.g., non-manifold), the representation still works.
-				</p>
-
-				<div class="row" style="margin-bottom:5px">
+				<center>
+					<div class="row" style="margin-bottom:5px">
 					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/pipeline.png" style="width:85%; margin-bottom:20px">
-						<p>Pipeline of Laplacian2Mesh.</p>
-					</div>
-				</div>
-				<p style="text-align:justify;">
-					Our network pipeline for coping with the mesh classification and segmentation tasks. Given a 3D mesh as the input,
-					we precompute the extrinsic and intrinsic geometric features and project them into the spectral domain w.r.t.
-					three different resolutions. Inspired by the U-Net architecture,
-					we propose to use the SE-ResNet blocks with small-sized convolution kernels to fuse the nearby-frequency features,
-					and the Laplacian pooling/unpooling to fuse the spectral features of different resolutions.
-					For the segmentation task, we re-scale (with the yellow block) and concatenate the features together to be processed
-					by the segmentation block.
-				</p>
+						<video class="video" src="videos/SIG_2023_P2M.mp4" controls="controls" autoplay="autoplay" loop="loop" style="width:98%; margin-bottom:20px"></video>
 
-				<div class="row" style="margin-bottom:5px">
-					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/pooling_unpooling.png" style="width:85%; margin-bottom:20px">
-						<p>Pooling and Unpooling of Laplacian2Mesh.</p>
+<!--						<img class="thumbnail" src="figs/gallery.png" style="width:98%; margin-bottom:20px">-->
 					</div>
-				</div>
-				<p style="text-align:justify;">
-					The Laplacian pooling and unpooling operations transform the spectral-based features between different resolutions,
-					where the pooling operation proceeds from a finer level to a coarser level while the unpooling operation does the opposite.
-				</p>
+					<p>In this paper, we propose a method for fast query of the closest geometric primitive on a mesh surface to a user-specified point. 
+						Specifically, we use a KD tree (KDT) built from the vertex set 𝑉 to help identify the real geometric primitive that defines the minimum distance. 
+						Once the nearest vertex 𝑣𝑖 to the query point is found by KDT search, we aim to utilize the information from 𝑣𝑖 to find the closest point 𝑞′ on the mesh surface. 
+						To do this,we precompute an interception table that stores information about which vertices intercept which edges and faces. 
+						When a query is performed, the KDT is searched to find the nearest vertex 𝑣𝑖, and then the interception table is looked up to identify the geometric primitive that contains 𝑞′.</p>
+					</div>
+				</center>
+			<p>
+				To efficiently precompute the interception table, we suggest two techniques for fast interception inspection. 
+				First,relaxing the intersection domain between cells into a convex polytope and use an effective filtering rule for fast interception inspection. 
+				Second, we suggest a flooding procedure of interception inspection to avoid exhausting all the vertex-edge and vertex-face pairs. 
+				These techniques are simple yet effective and enable to precompute the interception table in a short period of time. 
+				In fact, the pre-processing time for the interception table is about two minutes for a 1500K-face model, compared to more than one day for a brute-force approach.
+				<br>
+
+				Overall, our method aims to improve the query speed for a wide range of research fields that require fast query of the closest geometric primitive on a mesh surface, 
+				including computer graphics, physical simulation, computational geometry, and computer-aided design.
+			</p>
 			</div>
 
 			<br>
@@ -188,93 +160,183 @@
 			<div class="section abstract">
 				<h2>Results</h2><br>
 
-				<div class="row" style="margin-bottom:5px">
+				<center>
+					<div class="row" style="margin-bottom:5px">
 					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/coseg_seg.png" style="width:95%; margin-bottom:20px">
+						<img class="thumbnail" src="figs/DragonAndInterNum.png" style="width:50%; margin-bottom:20px">
+					</div>
+					<p>
+						Different vertices have different numbers of intercepted primitives.We visualize the vertices in varying colors according to the length of inter-
+						ception list. We set the vertical axis to be in a logarithmic scale. The vertexcolored in red owns a long interception list. </p>
+					</div>
+
+				</center>
+
+
+				<center>
+					<div class="row" style="margin-bottom:5px">
+						<div class="col" style="text-align:center">
+							<img class="thumbnail" src="figs/query_breakdown.png" style="width:70%; margin-bottom:20px">
+						</div>
 						<p>
-							Gallery of segmentation results for the COSEG dataset.
-							From left to right, they are Tele-aliens, Chairs, and Vases.
+							Cost breakdown of query performance on 5 models.
 						</p>
 					</div>
 
-					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/humanbody_seg.png" style="width:80%; margin-bottom:20px">
+				</center>
+
+				<center>
+					<div class="row" style="margin-bottom:5px">
+						<div class="col" style="text-align:center">
+							<img class="thumbnail" src="figs/query_time_break.png" style="width:70%; margin-bottom:20px">
+						</div>
 						<p>
-							We test the dataset of Human Body, and visualize the segmentation result for every model.
-						</p>
+							Our method achieves good query efficiency on both high and low quality meshes. 
+							Each of the six models has a low quality triangle mesh, and a high quality counterpart. The high quality counterparts of the We list the PQP, FCPW, and our query efficiency on these test models. and our query performance on these test models </p>
 					</div>
-				</div>
+
+				</center>
+
+				<center>
+					<div class="row" style="margin-bottom:5px">
+						<div class="col" style="text-align:center">
+							<img class="thumbnail" src="figs/tri_soup_0119.png" style="width: 70%; margin-bottom:20px">
+						</div>
+						<p>
+							Test PQP, FCPW and ours on the Bear model with water-tight/broken triangulation. (left) Watertight triangulation. (center) Triangle soup with gapped triangles. (right) Triangle soup with high penetration. 
+							Our comparative advantage over BVH-based methods becomes smaller for a set of gapped triangles whereas larger in the presence of high penetration. </p>
+					</div>
+
+				</center>
+
+				<center>
+					<div class="row" style="margin-bottom:5px">
+						<div class="col" style="text-align:center">
+							<img class="thumbnail" src="figs/Thingi10K_query.png" style="width:70%; margin-bottom:20px">
+						</div>
+						<p>
+							We have tested the query efficiency on the complete Thingi10K dataset[Zhou and Jacobson 2016],
+							 which is a comparison of the query efficiency of PQP,FCPW and our method on Thingi10K. </p>
+					</div>
+
+				</center>
+
 			</div>
 
 			<br>
 
-			<div class="section abstract">
-				<h2>Strengths</h2><br>
-				<p style="text-align:justify;">
-					Laplacian2Mesh combines the geometric spectral theory with deep learning,
-					which overcomes the challenges of dealing with the irregular connectivity of meshes,
-					and is a promising direction to understand 3D shapes in a tessellation independent manner.
-					Our network inherits some merits of spectral analysis approaches.
-					First, it can encode the shape features in various levels (from local to global) and naturally has a noise-resistance ability.
-					Second, it is independent of mesh resolution/tesselation and can handle non-watertight, non-manifold, and incomplete triangle-meshes.
-				</p>
-				<div class="row" style="margin-bottom:5px">
-					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/anti-noise.png" style="width:95%; margin-bottom:20px">
-						<p>
-							The qualitative results of testing the noise-resistance.
-							As noise levels rise, segmentation outputs of DiffusionNet diverge significantly from the ground-truth,
-							while ours is more in line with it. Numbers are levels of Gaussian noise added.
-							<br>
-							(a) DiffusionNet-hks; (b) DiffusionNet-xyz; (c) Laplacian2Mesh; (d) Laplacian2Mesh (point cloud); (e) Ground-Truth.
-						</p>
-					</div>
+<!--				<div class="section abstract">-->
+<!--				<h2>Consolidation Results</h2><br>-->
+<!--				<br>-->
+<!--				<center>-->
+<!--					<div class="row" style="margin-bottom:5px">-->
+<!--					<div class="col" style="text-align:center">-->
+<!--						<img class="thumbnail" src="figs/conso.png" style="width:100%; margin-bottom:20px">-->
+<!--					</div>-->
+<!--					<p>Test point cloud consolidation approaches by introducing different levels of noise. It can be seen that our method can not only effectively eliminate-->
+<!--						noise but also recover faithful feature lines. -->
+<!--					</p>-->
+<!--					</div>-->
+<!--				</center>-->
+<!--			-->
+<!--				-->
+<!--				</div>-->
+<!--			<br>-->
 
-					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/un-manifold.png" style="width:95%; margin-bottom:20px">
-						<p>
-							Our Laplacian2Mesh is able to perform segmentation on the nonwatertight
-							and non-manifold data.
-							(a) and (b) are non-watertight vases and chairs,
-							respectively; (c) has a non-manifold vertex, and (d) has a non-manifold edge.
-						</p>
-					</div>
+<!--				<div class="section abstract">-->
+<!--				<h2>Reconstruction Results</h2>-->
+<!--				-->
 
-					<div class="col" style="text-align:center">
-						<img class="thumbnail" src="figs/incomplete_models.png" style="width:70%; margin-bottom:20px">
-						<p>
-							The results on incomplete models. The red dashed boxes on the mesh indicate the deleted parts.
-							The green dashed boxes highlight the inaccurate segmentation boundaries.
-						</p>
-					</div>
 
-				</div>
+<!--				<center>-->
+<!--					<div class="row" style="margin-bottom:5px">-->
+<!--					<div class="col" style="text-align:center">-->
+<!--						<img class="thumbnail" src="figs/recon.png" style="width:100%; margin-bottom:20px">-->
+<!--					</div>-->
+<!--					<p>Comparison with state of the arts of surface reconstruction from different point cloud consolidation methods. The whole pipeline of RFEPS surpasses-->
+<!--						other methods in terms of reconstruction fidelity and manifoldness.-->
+<!--					</p>-->
+<!--					</div>-->
+<!--				</center>-->
+<!--				<br>-->
+
+
+<!--				<h2>Noisy Reconstruction Results</h2><br>-->
+<!--				<center>-->
+<!--					<div class="row" style="margin-bottom:5px">-->
+<!--					<div class="col" style="text-align:center">-->
+<!--						<img class="thumbnail" src="figs/reconnoise.png" style="width:100%; margin-bottom:20px">-->
+<!--					</div>-->
+<!--					<p> Comparison with state of the arts on a noisy point cloud input. RFEPS surpasses other methods in both the accuracy and manifoldness of the-->
+<!--						reconstruction.-->
+<!--					</div>-->
+<!--				</center>-->
+<!--				<br>-->
+
+				
+				<center>
+					<br>
+									<h2 align="center">Coming Soon. </h2>
+				</center>
+			
+				
 			</div>
+			
+			
+			
 
+			
 			<div class="section list">
 				<h2>Citation</h2>
 				<div class="section bibtex">
-					<pre>
-@ARTICLE{Dong2023Laplacian2Mesh,
-author={Dong, Qiujie and Wang, Zixiong and Li, Manyi and Gao, Junjie and Chen, Shuangmin and Shu, Zhenyu and Xin, Shiqing and Tu, Changhe and Wang, Wenping},
-title={Laplacian2Mesh: Laplacian-Based Mesh Understanding},
-journal={IEEE Transactions on Visualization and Computer Graphics},
-year={2023},
-pages={1-13},
-doi={10.1109/TVCG.2023.3259044}
-}					</pre>
+					<pre>@article{Zong2023P2M,
+author    = {Zong,Chen and Xu,Jiacheng and Song, Jiantao and Xin, Shiqing and Chen , Shuangmin and Wang, Wenping and Tu, Changhe},
+title     = {P2M: A Fast Solver for Querying Distance from Point to Mesh Surface},
+journal   = {ACM Transactions on Graphics (TOG)},
+year      = {2023},
+publisher = {ACM},
+pages     = {1--11},
+doi	  = {10.1145/3592439},
+booktitle = {ACM SIGGRAPH 2023 Papers},
+series = {SIGGRAPH '23}
+}</pre>
 				</div>
 			</div>
-
+			
+		<!-- 	<div class="section list">
+				<h2>Related Links</h2>
+				<div class="row" style="margin-top:15px">
+				<li>Parts of <a href="https://github.com/Totoro97/NeuS" target="_blank">our PyTorch implementation</a> are taken from <a href="https://github.com/lioryariv/idr" target="_blank">IDR</a> and <a href="https://github.com/yenchenlin/nerf-pytorch" target="_blank">NeRF-pytorch</a>.
+				<li>Check the concurrent works of learning neural implicit surfaces: </br> 			
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://arxiv.org/abs/2104.10078" target="_blank">UNISURF: Unifying Neural Implicit Surfaces and Radiance Fields for Multi-View Reconstruction</a>, Oechsle et al. 2021 </br>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://arxiv.org/abs/2106.12052" target="_blank">Volume Rendering of Neural Implicit Surfaces</a>, Yariv et al. 2021 
+				<li>Also check other works about neural scene representations and neural rendering from our group: </br> 
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://lingjie0206.github.io/papers/NSVF/" target="_blank">Neural Sparse Voxel Fields:</a>, Liu et al. 2020 </br> 	
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/" target="_blank">Non-Rigid Neural Radiance Fields: Reconstruction and Novel View Synthesis of a Dynamic Scene From Monocular Video</a>, Tretschk et al. 2021</br> 	
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="http://gvv.mpi-inf.mpg.de/projects/NeuralActor/" target="_blank">Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control</a>, Liu et al. 2021 </br> 	
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="https://liuyuan-pal.github.io/NeuRay/" target="_blank">Neural Rays for Occlusion-aware Image-based Rendering</a>, Liu et al. 2021. </br> 	
+				</div>
+			</div>
+			
+			<div class="section list">
+				<h2>Acknowledgements</h2>
+				<div class="row" style="margin-top:15px">
+				<p>We thank Michael Oechsle for providing the results of UNISURF. Christian Theobalt was supported by ERC Consolidator Grant 770784. Lingjie Liu was supported by Lise Meitner Postdoctoral Fellowship.</p> 
+				</div>
+			</div> -->
+			
+			
 			<div class="section">
 				<hr class="smooth">
-				This page is maintained by <a href="https://qiujiedong.github.io/" itemprop="url" rel="noopener">Qiujie Dong</a>.
-<!--				Latest updated on-->
-<!--				<script type="text/javascript">-->
-<!--					var m = document.lastModified;-->
-<!--					var p = m.length - 9;-->
-<!--					document.write(m.substring(p, 0) + ".");-->
-<!--            	</script>-->
+			Page last updated 
+				<script type="text/javascript">
+					var m = "This page was last updated: " + document.lastModified;
+					var p = m.length - 9;
+					document.writeln("<left>");
+					document.write(m.substring(p, 0) + ".");
+					document.writeln("</left>");
+				</script>
+			
 			</div>
 		</div>
 	</div>
