@@ -24,7 +24,7 @@ We are re-implementing the MATLAB code using C++ for better efficiency. We will 
 
 
 ## Citation
-If you find our work useful, please cite our paper:
+Please consider citing our work if you find it useful:
 
 ```bibtex
 @inproceedings{zhao2024clustereg,
