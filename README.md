@@ -34,9 +34,10 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 
 
 ## MATLAB 
+```
 - Step 1: Download the directory **"matlab_code"**, which contains data normalization, registration, and denormalization implementations. 
 - Step 2: Start MATLAB and run **"test_demo.m"**. This will give you an immediate registration result for the test point cloud data in the directory **"data"**. 
-
+```
   
 
 
