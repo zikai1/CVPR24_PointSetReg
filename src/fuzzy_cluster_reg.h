@@ -106,19 +106,18 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
         std::chrono::duration<double> duration = end - start;
         std::cout << "elkan_kmeans time: " << duration.count() << " s" << std::endl;
 
-        std::cout << dUtQ.rows() << ' ' << dUtQ.cols() << std::endl;
-        std::cout << AinvQ.rows() << ' ' << AinvQ.cols() << std::endl;
-        std::cout << P.rows() << ' ' << P.cols() << std::endl;
         W = 1.0 / (lamdba * sigma2) * (P - dUtQ * (AinvQ * P));
 
         double wdist_pt2center = fabs((FT * dU * F + T.transpose() * dUt * T - 2 * Uttgt.transpose() * T).trace());
+//        std::cout << wdist_pt2center << std::endl;
         double H_U = (U.array() * logU.array()).sum();
         double H_alpha = nb_tar * alpha * log_alpha.transpose();
         double KL_U_alpha = H_U - H_alpha;
-
         loss = (1.0 / sigma2) * wdist_pt2center + nb_tar * dim * log(sigma2) +
-               lamdba / 2 * (QtW.transpose() * QtW).trace()
+               0.5 * lamdba  * (QtW.transpose() * QtW).trace()
                + beta * KL_U_alpha;
+        std::cout <<  beta * KL_U_alpha << std::endl;
+        std::cout << 0.5 * lamdba  * (QtW.transpose() * QtW).trace() << std::endl;
         std::cout << "loss=" << loss << std::endl;
         ntol = abs((loss - loss_old) / loss);
 

@@ -119,7 +119,7 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
 
 
     wdist_pt2center=abs(trace(FT*dU*F+T'*dUt*T-2*Uttgt'*T));
-    
+    %disp(wdist_pt2center);
     % Entropy of U
     H_U=sum(sum(U.*logU)); 
     % Entropy of alpha
@@ -129,6 +129,8 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
 
     %-----Acceleration by pre-computing NpD=Np*D
     Loss=(1/sigma2)*wdist_pt2center+NpD*log(sigma2)+lambda/2*trace(QtW'*QtW)+beta*(KL_U_alpha);
+    disp(beta*(KL_U_alpha));
+    disp(lambda/2*trace(QtW'*QtW));
     ntol=abs((Loss-Loss_old)/Loss);
     
     
