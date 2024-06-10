@@ -56,7 +56,12 @@ void kmeans(Eigen::MatrixXd& data, int max_iter,
                 Eigen::VectorXi& idx, Eigen::MatrixXd& center, int& m) {
     size_t num = data.rows(), dim = data.cols();
     Eigen::VectorXi dex;
-    igl::randperm(num, dex);
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine rng(seed);
+    igl::randperm(num, dex, rng);
+//    for(int i = 0; i < m; i++) {
+//        std::cout << dex[i] << std::endl;
+//    }
     center = data(dex.segment(0, m), Eigen::all);
 //    std::cout << max_iter << std::endl;
     for(int i = 0; i < max_iter; i++) {

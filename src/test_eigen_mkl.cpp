@@ -13,8 +13,8 @@ int main() {
 #endif
 
     mkl_set_num_threads(10);
-    Eigen::MatrixXd A = Eigen::MatrixXd::Random(1000, 1000);
-    Eigen::MatrixXd B = Eigen::MatrixXd::Random(1000, 1000);
+    Eigen::MatrixXd A = Eigen::MatrixXd::Random(5000, 5000);
+    Eigen::MatrixXd B = Eigen::MatrixXd::Random(5000, 5000);
 
     auto start = std::chrono::high_resolution_clock::now();
     Eigen::MatrixXd C = A * B;

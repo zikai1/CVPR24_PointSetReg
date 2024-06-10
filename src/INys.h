@@ -55,12 +55,14 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
 
 
     auto start = std::chrono::high_resolution_clock::now();
-    elkan_kmeans(data, 5, idx, center, m);
-//    kmeans(data, 5, idx, center, m);
+//    elkan_kmeans(data, 5, idx, center, m);
+    kmeans(data, 5, idx, center, m);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "elkan_kmeans time: " << duration.count() << " s" << std::endl;
-
+//    for(int i = 0; i < m; i++) {
+//        std::cout << center.row(i) << std::endl;
+//    }
 
     Eigen::MatrixXd W, E;
 

@@ -74,8 +74,16 @@ int main() {
     omp_set_num_threads(10);
     mkl_set_num_threads(10);
 //    Eigen::MatrixXd a, b, res1, res2;
-////    return 0;
-////    a.resize(1, 3);
+//
+//    a.resize(2, 3);
+//    a << 1,2,3,6,5,4;
+//    b.resize(2,3);
+//    b << 3,2,1,4,5,6;
+//    sqdist_omp(a, b ,res1);
+////    pdist_cityblock_omp(a, a, res1);
+//    std::cout << res1 << std::endl;
+//    return 0;
+//    return 0;
 ////    a << 1, 2, 3;
 //    b.resize(3, 3);
 //    b << 2, 3, 4,

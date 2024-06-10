@@ -128,7 +128,7 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
     KL_U_alpha=H_U-H_alpha;
 
     %-----Acceleration by pre-computing NpD=Np*D
-    Loss=(1/sigma2)*wdist_pt2center+NpD*log(sigma2)+lambda/2*trace(QtW'*QtW)+beta*(KL_U_alpha);  
+    Loss=(1/sigma2)*wdist_pt2center+NpD*log(sigma2)+lambda/2*trace(QtW'*QtW)+beta*(KL_U_alpha);
     ntol=abs((Loss-Loss_old)/Loss);
     
     

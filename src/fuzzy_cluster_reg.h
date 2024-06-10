@@ -19,7 +19,7 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
     double sigma2 = (nb_tar * (src_pt * src_pt.transpose()).trace() +
                 nb_src * (tar_pt * tar_pt.transpose()).trace() -
                 2 * src_pt.colwise().sum() * tar_pt.colwise().sum().transpose()) / (nb_src * nb_tar * dim);
-
+    std::cout << "sigma2=" << sigma2 << std::endl;
     double theta = 0.5;
     Base::Kernel kernel = {"rbf_l1", theta};
 
@@ -52,18 +52,20 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
     double eps = 1e-10;
 
     while(ntol > tol && iter < maxNumIter && sigma2 > 1e-8) {
-        std::cout << loss << std::endl;
+
         double loss_old = loss;
         Eigen::MatrixXd QtW = Q.transpose() * W;
         Eigen::MatrixXd fuzzy_dis;
         sqdist_omp(F, T, fuzzy_dis);
         fuzzy_dis = (-fuzzy_dis / (sigma2 * beta)).array().exp().array().rowwise() * alpha.array();
-//        std::cout << fuzzy_dis.rows() << ' ' << fuzzy_dis.cols() << std::endl;
+        std::cout << fuzzy_dis.rows() << ' ' << fuzzy_dis.cols() << std::endl;
 
-        Eigen::VectorXd sum_fuzzy_dist = 1.0 / fuzzy_dis.rowwise().sum().array();
+        Eigen::RowVectorXd sum_fuzzy_dist = 1.0 / fuzzy_dis.rowwise().sum().array();
 //        std::cout << sum_fuzzy_dist.rows() << ' ' << sum_fuzzy_dist.cols() << std::endl;
-        Eigen::MatrixXd U = fuzzy_dis.array() * sum_fuzzy_dist.array();
+        Eigen::MatrixXd U = fuzzy_dis.array().rowwise() * sum_fuzzy_dist.array();
+        std::cout << U.rows() << ' ' << U.cols() << std::endl;
         U = U.array() + eps;
+        std::cout << U.rows() << ' ' << U.cols() << std::endl;
         Eigen::MatrixXd logU = U.array().log();
         alpha = U.colwise().sum() / nb_tar;
 
@@ -74,14 +76,16 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
 
         Eigen::MatrixXd Ut1 = U.transpose() * onesUx;
 
-        Eigen::DiagonalMatrix<double, Eigen::Dynamic> dU(U1.diagonal());
-        Eigen::DiagonalMatrix<double, Eigen::Dynamic> dUt(Ut1.diagonal());
+        Eigen::DiagonalMatrix<double, Eigen::Dynamic> dU = U1.asDiagonal();
+        Eigen::DiagonalMatrix<double, Eigen::Dynamic> dUt = Ut1.asDiagonal();
 
         Eigen::SparseMatrix<double> dUtQ = (dUt * Q).sparseView();
         Eigen::MatrixXd Uttgt = U.transpose() * tar_pt;
-
-        Eigen::MatrixXd P = Uttgt - dUt * src_pt;
-//        std::cout << Q.transpose()
+//        std::cout <<"Uttgt shape="<< Uttgt.rows() << ' ' << Uttgt.cols() << std::endl;
+//        std::cout << dUt.rows() << ' ' << dUt.cols() << std::endl;
+//        Eigen::MatrixXd P = Uttgt - dUt * src_pt;
+        Eigen::MatrixXd P = dUt * src_pt;
+        auto start = std::chrono::high_resolution_clock::now();
         Eigen::SparseMatrix<double> A = (lamdba * sigma2 * IdentMatrix + Q.transpose() * dUtQ).sparseView();
         Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
         solver.compute(A);
@@ -90,18 +94,24 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
             std::cerr << "Decomposition failed" << std::endl;
         }
 
+
+
         // 构建单位矩阵 I
         Eigen::SparseMatrix<double> I(A.rows(), A.cols());
         I.setIdentity();
 
         // 计算稀疏矩阵 A 的逆
         Eigen::MatrixXd AinvQ = solver.solve(Q.transpose());
-        std::cout <<  iter << std::endl;
-//        std::cout << A.rows() << ' ' << A.cols() << std::endl;
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "elkan_kmeans time: " << duration.count() << " s" << std::endl;
+
+        std::cout << dUtQ.rows() << ' ' << dUtQ.cols() << std::endl;
+        std::cout << AinvQ.rows() << ' ' << AinvQ.cols() << std::endl;
+        std::cout << P.rows() << ' ' << P.cols() << std::endl;
         W = 1.0 / (lamdba * sigma2) * (P - dUtQ * (AinvQ * P));
 
         double wdist_pt2center = fabs((FT * dU * F + T.transpose() * dUt * T - 2 * Uttgt.transpose() * T).trace());
-        std::cout << wdist_pt2center << std::endl;
         double H_U = (U.array() * logU.array()).sum();
         double H_alpha = nb_tar * alpha * log_alpha.transpose();
         double KL_U_alpha = H_U - H_alpha;
@@ -109,12 +119,12 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
         loss = (1.0 / sigma2) * wdist_pt2center + nb_tar * dim * log(sigma2) +
                lamdba / 2 * (QtW.transpose() * QtW).trace()
                + beta * KL_U_alpha;
+        std::cout << "loss=" << loss << std::endl;
         ntol = abs((loss - loss_old) / loss);
 
         T = src_pt + Q * (Q.transpose() * W);
 
         sigma2 = wdist_pt2center / (nb_tar * dim);
-        std::cout <<  iter << std::endl;
 //        break;
         iter++;
     }

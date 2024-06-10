@@ -3,7 +3,6 @@ function [idx, center, m] = eff_kmeans(data, m, MaxIter);
 [n, dim] = size(data);
 dex = randperm(n);
 center = data(dex(1:m),:);
-
 for i = 1:MaxIter;
     nul = zeros(m,1);
     [xx, idx] = min(sqdist(center', data'));
