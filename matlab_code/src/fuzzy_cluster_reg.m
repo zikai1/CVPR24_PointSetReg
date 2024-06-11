@@ -17,7 +17,8 @@ function [alpha,T]=fuzzy_cluster_reg(src_pt, tgt_pt)
 
 [Nc,~]=size(src_pt); 
 [Np,D]=size(tgt_pt); 
-NpD=gpuArray(Np*D);
+% NpD=gpuArray(Np*D);
+NpD = Np*D;
 
 % Merge centroids between the both point sets first
 src_pt_center=mean(src_pt,1);
@@ -44,7 +45,7 @@ fprintf('Elapsed time is %.2f seconds.\n', elapsedTime);
 
 % Parameter initialization 
 W=zeros(Nc,D);
-W=gpuArray((W));
+% W=gpuArray((W));
 
 iter=0;
 tol=1e-5;
@@ -66,18 +67,19 @@ lambda=0.1;% 0.1 in default
 
 alpha=ones(1,Nc);
 
-alpha=gpuArray((alpha));
+% alpha=gpuArray((alpha));
 onesUy=ones(Nc,1);
-onesUy=gpuArray((onesUy));
+% onesUy=gpuArray((onesUy));
 onesUx=ones(Np,1);
-onesUx=gpuArray((onesUx));
+% onesUx=gpuArray((onesUx));
 IdentMatrix=eye(c);
-IdentMatrix=gpuArray((IdentMatrix));
+% IdentMatrix=gpuArray((IdentMatrix));
 
 viz=1;
 NEAR_0=1e-10; % avoid logx->-inf and NaN 
 
 figure;
+tic;
 while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
     
     Loss_old=Loss;
@@ -86,7 +88,7 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
     
     %Acceleration by pre-computing FF,Np,Nc,FT    
     fuzzy_dist=exp(-sqdist2(FF,Np,Nc,FT,T')/(sigma2*beta)).*alpha;% beta设置较小数，收敛更快，效果更好
-    
+    disp(fuzzy_dist(1,1));
     sum_fuzzy_dist=1./(sum(fuzzy_dist,2));% sum over the same centroid
     U=fuzzy_dist.*sum_fuzzy_dist; % sum(U,2)=1,construct fuzzy partition matrix
     
@@ -119,18 +121,16 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
 
 
     wdist_pt2center=abs(trace(FT*dU*F+T'*dUt*T-2*Uttgt'*T));
-    %disp(wdist_pt2center);
+    
     % Entropy of U
     H_U=sum(sum(U.*logU)); 
     % Entropy of alpha
     H_alpha=Np*alpha*log_alpha';
     
     KL_U_alpha=H_U-H_alpha;
-
+    asd1 = lambda/2*trace(QtW'*QtW);
     %-----Acceleration by pre-computing NpD=Np*D
     Loss=(1/sigma2)*wdist_pt2center+NpD*log(sigma2)+lambda/2*trace(QtW'*QtW)+beta*(KL_U_alpha);
-    disp(beta*(KL_U_alpha));
-    disp(lambda/2*trace(QtW'*QtW));
     ntol=abs((Loss-Loss_old)/Loss);
     
     
@@ -146,7 +146,7 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
         cpd_plot_iter(tgt_pt,T);
     end
     
-    disp(["iter:" iter, "sigma2:" gather(sigma2), "tolerance:" gather(ntol)]);
+    disp(["iter:" iter,"KL_U_alpha" gather(KL_U_alpha) ,"wdist_pt2center:" gather(wdist_pt2center),"sigma2:" gather(sigma2), "tolerance:" gather(ntol)]);
 
 
 
@@ -155,6 +155,8 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
 
   
 end
+elapsedTime = toc;
+fprintf('time: %.5f 秒\n', elapsedTime);
 
 
 

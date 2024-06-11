@@ -50,18 +50,21 @@ namespace IO {
         if (!plyOut.hasElement(vertexName)) {
             plyOut.addElement(vertexName, nb_points);
         }
-
         // De-interleave
         std::vector<double> xPos(nb_points);
         std::vector<double> yPos(nb_points);
         std::vector<double> zPos(nb_points);
+
         #pragma omp parallel for
-        for (int i = 0; i < points.size(); i++) {
+        for (int i = 0; i < nb_points; i++) {
             xPos[i] = points(i, 0);
             yPos[i] = points(i, 1);
             zPos[i] = points(i, 2);
         }
 
+//        std::cout << xPos.size() << std::endl;
+//        std::cout << yPos.size() << std::endl;
+//        std::cout << zPos.size() << std::endl;
         // Store
         plyOut.getElement(vertexName).addProperty<double>("x", xPos);
         plyOut.getElement(vertexName).addProperty<double>("y", yPos);
@@ -85,7 +88,7 @@ namespace IO {
         std::vector<double> xPos(nb_points);
         std::vector<double> yPos(nb_points);
 #pragma omp parallel for
-        for (int i = 0; i < points.size(); i++) {
+        for (int i = 0; i < nb_points; i++) {
             xPos[i] = points(i, 0);
             yPos[i] = points(i, 1);
         }

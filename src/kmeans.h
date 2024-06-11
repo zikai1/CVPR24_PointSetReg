@@ -92,6 +92,8 @@ void elkan_kmeans(Eigen::MatrixXd& data, int max_iter,
             Eigen::VectorXi& idx, Eigen::MatrixXd& center, int& m) {
     size_t num = data.rows(), dim = data.cols();
     Eigen::VectorXi dex;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine rng(seed);
     igl::randperm(num, dex);
     center = data(dex.segment(0, m), Eigen::all);
     Eigen::VectorXd tmp(m);

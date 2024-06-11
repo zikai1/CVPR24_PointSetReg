@@ -46,6 +46,5 @@ end
 [Ve, Va] = eig(W);
 va = diag(Va);
 pidx = find(va > 1e-6);
-disp(va(end-9:end))
 inVa = sparse(diag(va(pidx).^(-0.5)));
 G = E * Ve(:,pidx) * inVa;

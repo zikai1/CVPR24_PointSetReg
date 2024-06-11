@@ -56,7 +56,7 @@ hold off;
 
 src_pt_normal_gpu=gpuArray(src_pt_normal);
 tgt_pt_normal_gpu=gpuArray(tgt_pt_normal);
-[alpha,T_deformed]=fuzzy_cluster_reg(src_pt_normal_gpu,tgt_pt_normal_gpu);
+[alpha,T_deformed]=fuzzy_cluster_reg(src_pt_normal,tgt_pt_normal);
 
 
 % Denormalize the deformed point cloud

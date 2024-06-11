@@ -11,7 +11,7 @@
 #include "fuzzy_cluster_reg.h"
 #include <chrono>
 
-#include <mkl.h>
+//#include <mkl.h>
 //#include <armadillo>
 
 //void fuzzy_cluster_reg(Eigen::MatrixXd& src, Eigen::MatrixXd& tar,
@@ -71,11 +71,11 @@ int main() {
 //    int max_threads = omp_get_max_threads();
 //    std::cout << max_threads << std::endl;
 //    Eigen::setNbThreads(max_threads);
-    omp_set_num_threads(10);
-    mkl_set_num_threads(10);
-//    Eigen::MatrixXd a, b, res1, res2;
-//
-//    a.resize(2, 3);
+    omp_set_num_threads(20);
+//    mkl_set_num_threads(10);
+    Eigen::MatrixXd  b, res1, res2;
+    Eigen::RowVectorXd a;
+    a.resize(2);
 //    a << 1,2,3,6,5,4;
 //    b.resize(2,3);
 //    b << 3,2,1,4,5,6;
@@ -84,11 +84,18 @@ int main() {
 //    std::cout << res1 << std::endl;
 //    return 0;
 //    return 0;
-////    a << 1, 2, 3;
-//    b.resize(3, 3);
-//    b << 2, 3, 4,
-//         5, 6, 7,
-//         8,9,10;
+//    a << 1,2;
+//    b.resize(2, 2);
+//    b << 2,2,2,1;
+//    Eigen::RowVectorXd c = b.rowwise().sum().array().inverse();
+//    std::cout << c << std::endl;
+//    return 0;
+//    b = b.array().exp().rowwise() * a.array();
+////    double s = b.sum() ;
+//    std::cout << b <<std::endl;
+////    std::cout << s <<std::endl;
+//    return 0;
+
 //    std::cout << b.diagonal() << std::endl;
 //    return 0;
 //    Eigen::MatrixXd ss;
@@ -104,6 +111,11 @@ int main() {
 
     Base::PointSet src(src_points);
     Base::PointSet tar(tar_points);
+//    std::cout << src.scale_ << std::endl;
+//    std::cout << src.centroid_ << std::endl;
+//    IO::write_3D_points("../src1.ply", src_points);
+//    IO::write_3D_points("../tar.ply", tar.points_);
+//    return 0;
     Eigen::RowVectorXd alpha;
     Base::PointSet res;
 
@@ -112,6 +124,7 @@ int main() {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "fuzzy_cluster_reg time: " << duration.count() << " s" << std::endl;
+    IO::write_3D_points("../out.ply", res.points_);
 //    Eigen::MatrixXd tar(1, 3);
 //    tar <<  1,2,3;
 ////    fuzzy_cluster_reg(src, tar);
