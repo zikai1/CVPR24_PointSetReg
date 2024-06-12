@@ -42,7 +42,12 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 
 
 ## C++
-We are re-implementing the MATLAB code using C++ for better efficiency. We will release it as soon as possible!
+### Prerequisite
++ **Eigen** (1.66 or later): https://sourceforge.net/projects/boost/files/boost-binaries/
++ **libgil** (2.5.0 or later): https://libigl.github.io/
++ **MOSEK 8**: https://www.mosek.com/downloads/, MOSEK license is required.
++ **PolyCut**: http://www.cs.ubc.ca/labs/imager/tr/2018/HexDemo/, download and extract it to a folder, be aware that it has one-month license.
++ **HexEx**: https://www.graphics.rwth-aachen.de/media/resource_files/HexEx_Windows_1_01.zip, download and extract it to a folder.
 
 
 ## Citation

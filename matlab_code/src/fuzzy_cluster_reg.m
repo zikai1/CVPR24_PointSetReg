@@ -142,11 +142,11 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
     
     
     % Visualize 
-    if viz
-        cpd_plot_iter(tgt_pt,T);
-    end
+    % if viz
+    %     cpd_plot_iter(tgt_pt,T);
+    % end
     
-    disp(["iter:" iter,"KL_U_alpha" gather(KL_U_alpha) ,"wdist_pt2center:" gather(wdist_pt2center),"sigma2:" gather(sigma2), "tolerance:" gather(ntol)]);
+    % disp(["iter:" iter,"KL_U_alpha" gather(KL_U_alpha) ,"wdist_pt2center:" gather(wdist_pt2center),"sigma2:" gather(sigma2), "tolerance:" gather(ntol)]);
 
 
 
