@@ -42,12 +42,40 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 
 
 ## C++
-### Prerequisite
-+ **Eigen** (1.66 or later): https://sourceforge.net/projects/boost/files/boost-binaries/
-+ **libgil** (2.5.0 or later): https://libigl.github.io/
-+ **MOSEK 8**: https://www.mosek.com/downloads/, MOSEK license is required.
-+ **PolyCut**: http://www.cs.ubc.ca/labs/imager/tr/2018/HexDemo/, download and extract it to a folder, be aware that it has one-month license.
-+ **HexEx**: https://www.graphics.rwth-aachen.de/media/resource_files/HexEx_Windows_1_01.zip, download and extract it to a folder.
+### Platform
+- Windows 11
+- CLion2024.1.2
+- Intel(R) Core i9-13900K
+- NVIDIA RTX 4090
+### Dependence
+Except for Intel-MKL, we recommend using vcpkg to install dependent libraries.
+```shell
+# Eigen3
+vcpkg install Eigen:x64-windwos
+# libigl
+vcpkg install libigl:x64-windows
+# cli11
+vcpkg install cli11:x64-windows
+```
+For Intel-MKL, we recommend using the official [installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) for installation.
+```shell
+# Set ${MKL_DIR} in your system/user environment variable
+MKL_DIR = ${YOUR_MKL_INSTALL_PATH}/oneAPI/mkl/latest/lib/cmake
+# Add following path to your system/user ${Path} environment variable
+${YOUR_MKL_INSTALL_PATH}/oneAPI/mkl/latest/bin
+${YOUR_MKL_INSTALL_PATH}/oneAPI/compiler/latest/bin
+```
+
+### How to build 
+
+Building our code in CLion:
+```shell
+# File -> Setting -> Build, Execution, Deployment -> CMake -> CMake Option :
+-DCMAKE_TOOLCHAIN_FILE=${YOUR_VCPKG_INSTALL_PATH}/scripts/buildsystems/vcpkg.cmake
+```
+Making sure that your `Toolchains` is set to `Visual Stdio` and `Architecture` is set to `amd64`.
+
+Finlly, Reload CMake via `File->Reload CMake Project` and build our code.
 
 
 ## Citation

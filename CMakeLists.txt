@@ -17,8 +17,3 @@ add_executable(CluReg src/main.cpp)
 target_link_libraries(CluReg PUBLIC Eigen3::Eigen igl::igl_core OpenMP::OpenMP_CXX)
 target_link_libraries(CluReg PUBLIC MKL::MKL)
 
-add_executable(test_mkl src/test_mkl.cpp)
-target_link_libraries(test_mkl PUBLIC MKL::MKL)
-
-add_executable(test_eigen_mkl src/test_eigen_mkl.cpp)
-target_link_libraries(test_eigen_mkl PUBLIC Eigen3::Eigen MKL::MKL)
