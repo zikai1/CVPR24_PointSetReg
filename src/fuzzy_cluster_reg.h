@@ -11,22 +11,22 @@
 
 void compute_fuzzy_dis_omp(Eigen::MatrixXd& fuzzy_dis, Eigen::RowVectorXd& alpha, double sigma2, double beta) {
     double div = sigma2 * beta;
-    int n = fuzzy_dis.rows();
+    int n = fuzzy_dis.rows(), m = fuzzy_dis.cols();
 #pragma omp parallel for collapse(2)
     for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
+        for(int j = 0; j < m; j++) {
             fuzzy_dis(i,j) = exp(-fuzzy_dis(i,j) / div) * alpha[j];
         }
     }
 }
 
 void compute_sum_fuzzy_dist_omp(Eigen::MatrixXd& fuzzy_dis, Eigen::VectorXd& sum_fuzzy_dist) {
-    int n = fuzzy_dis.rows();
+    int n = fuzzy_dis.rows(), m = fuzzy_dis.cols();
     sum_fuzzy_dist.resize(n);
 #pragma omp parallel for collapse(2)
     for(int i = 0; i < n; i++) {
         sum_fuzzy_dist[i] = 0.0;
-        for(int j = 0; j < n; j++) {
+        for(int j = 0; j < m; j++) {
             #pragma omp atomic
             sum_fuzzy_dist[i] += fuzzy_dis(i, j);
         }
@@ -35,15 +35,31 @@ void compute_sum_fuzzy_dist_omp(Eigen::MatrixXd& fuzzy_dis, Eigen::VectorXd& sum
 }
 
 void compute_U_logU_omp(Eigen::MatrixXd& fuzzy_dis,Eigen::VectorXd& sum_fuzzy_dist, Eigen::MatrixXd& U, Eigen::MatrixXd& logU, double eps) {
-    int n = fuzzy_dis.rows();
-    U.resize(n, n);
-    logU.resize(n, n);
+    int n = fuzzy_dis.rows(), m = fuzzy_dis.cols();
+    U.resize(n, m);
+    logU.resize(n, m);
 #pragma omp parallel for collapse(2)
-    for(int i = 0; i < n; i++) {
+    for(int i = 0; i < m; i++) {
         for(int j = 0; j < n; j++) {
             U(j, i) = fuzzy_dis(j, i) * sum_fuzzy_dist[j] + eps;
             logU(j, i) = log(U(j, i));
         }
+    }
+}
+
+void compute_alpha_log_alpha_omp(Eigen::MatrixXd& U, Eigen::RowVectorXd& alpha, Eigen::RowVectorXd& log_alpha, double eps) {
+    int n = U.rows(), m = U.cols();
+    alpha.resize(m);
+    log_alpha.resize(m);
+#pragma omp parallel for collapse(2)
+    for(int i = 0; i < m; i++) {
+        alpha[i] = 0.0;
+        for(int j = 0; j < n; j++) {
+            #pragma omp atomic
+            alpha[i] += U(j, i);
+        }
+        alpha[i] = alpha[i] / m + eps;
+        log_alpha[i] = log(alpha[i]);
     }
 }
 
@@ -88,10 +104,11 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
     Eigen::MatrixXd IdentMatrix = Eigen::MatrixXd::Identity(c, c);
 
     double eps = 1e-10;
-    Eigen::MatrixXd QtW, P, A,invA, U,logU, fuzzy_dis;
+    Eigen::MatrixXd QtW, P, U,logU, fuzzy_dis;
+    Eigen::MatrixXd A, invA;
     Eigen::MatrixXd dUtQ, Uttgt;
     Eigen::RowVectorXd log_alpha;
-    Eigen::VectorXd sum_fuzzy_dist, U1,Ut1;
+    Eigen::VectorXd sum_fuzzy_dist(nb_src), U1,Ut1;
     double invt = 0;
     start = std::chrono::high_resolution_clock::now();
 
@@ -102,16 +119,12 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
 
         sqdist_omp(F, T, fuzzy_dis);
 
-        auto ss = std::chrono::high_resolution_clock::now();
+
         compute_fuzzy_dis_omp(fuzzy_dis, alpha, sigma2, beta);
         compute_sum_fuzzy_dist_omp(fuzzy_dis, sum_fuzzy_dist);
         compute_U_logU_omp(fuzzy_dis, sum_fuzzy_dist, U, logU, eps);
-        auto ee = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> dd = ee - ss;
-        alpha = U.colwise().sum() / nb_tar;
 
-        alpha = alpha.array() + eps;
-        log_alpha = alpha.array().log();
+        compute_alpha_log_alpha_omp(U, alpha, log_alpha, eps);
 
         U1 = U * onesUy;
 
@@ -120,19 +133,24 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
         Eigen::DiagonalMatrix<double, Eigen::Dynamic> dU = U1.asDiagonal();
         Eigen::DiagonalMatrix<double, Eigen::Dynamic> dUt = Ut1.asDiagonal();
 
-        dUtQ = (dUt * Q).sparseView();
-        Uttgt = (U.transpose() * tar_pt);
+        dUtQ = dUt * Q;
+        Uttgt = U.transpose() * tar_pt;
+
 
         P = Uttgt - dUt * src_pt;
-
-        A = lamdba * sigma2 * IdentMatrix + Q.transpose() * dUtQ;
-
-        invA = A.inverse();
-
+        A = lamdba * sigma2 * IdentMatrix + Qt * dUtQ;
+        auto ss = std::chrono::high_resolution_clock::now();
+        Eigen::MatrixXd cc = Qt * dUtQ;
+        auto ee = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> dd = ee - ss;
         invt += dd.count();
-        W = 1.0 / (lamdba * sigma2) * (P - dUtQ * (invA * Qt * P));
+        invA =  A.inverse();
+
+
+        W = 1.0 / (lamdba * sigma2) * (P - dUtQ * (invA * (Qt * P)));
 
         double wdist_pt2center = fabs((FT * dU * F + T.transpose() * dUt * T - 2 * Uttgt.transpose() * T).trace());
+
         double H_U = (U.array() * logU.array()).sum();
         double H_alpha = nb_tar * alpha * log_alpha.transpose();
         double KL_U_alpha = H_U - H_alpha;
@@ -140,9 +158,11 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
                0.5 * lamdba  * (QtW.transpose() * QtW).trace()
                + beta * KL_U_alpha;
         ntol = abs((loss - loss_old) / loss);
+
         T = src_pt + Q * (Qt * W);
 
         sigma2 = wdist_pt2center / (nb_tar * dim);
+
         std::cout << "iter: " << iter  << " sigma2: " << sigma2 << " tol: " << ntol << std::endl;
  //        break;
         iter++;

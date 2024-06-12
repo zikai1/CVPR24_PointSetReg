@@ -24,7 +24,7 @@ add_definitions(-DEIGEN_USE_MKL_ALL)
 add_executable(CluReg src/main.cpp)
 #target_include_directories(CluReg PUBLIC ${Matlab_INCLUDE_DIRS})
 #target_link_libraries(CluReg PUBLIC ${Matlab_LIBRARIES})
-target_link_libraries(CluReg PUBLIC Eigen3::Eigen igl::igl_core OpenMP::OpenMP_CXX MKL::MKL)
+target_link_libraries(CluReg PUBLIC Eigen3::Eigen igl::igl_core OpenMP::OpenMP_CXX)
 target_link_libraries(CluReg PUBLIC MKL::MKL)
 
 #add_executable(test_matlab test_matlab.cpp)

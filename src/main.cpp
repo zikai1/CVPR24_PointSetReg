@@ -11,97 +11,17 @@
 #include "fuzzy_cluster_reg.h"
 #include <chrono>
 
-//#include <mkl.h>
-//#include <armadillo>
-
-//void fuzzy_cluster_reg(Eigen::MatrixXd& src, Eigen::MatrixXd& tar,
-//                       double lamdba = 0.1, double beta = 0.5,
-//                       double tol = 1e-5, int max_num_iter = 200) {
-//    size_t nb_src = src.rows(), nb_tar = tar.rows();
-//    size_t dim = src.cols();
-//
-//    Eigen::Vector3d src_centroid = src.colwise().mean();
-//    Eigen::Vector3d tar_centroid = tar.colwise().mean();
-//
-//    Eigen::VectorXd centroid_diff = tar_centroid - src_centroid;
-//
-//    src.array().rowwise() +=  centroid_diff.transpose().array();
-//
-//    double sigma2 = (nb_tar * (src * src.transpose()).trace() +
-//                    nb_src * (tar * tar.transpose()).trace() -
-//                    2 * src.colwise().sum() * tar.colwise().sum().transpose()) / (nb_src * nb_tar * dim);
-//
-//    double theta = 2;
-//
-//    Kernel kernel = {"rbf", theta};
-//    int m = ceil(0.3 * nb_src);
-//
-//    Eigen::MatrixXd Q;
-//    improved_nystrom_low_rank_approximation(kernel, src, "k", m, Q);
-//
-//    size_t c = Q.cols();
-//
-//    Eigen::MatrixXd W = Eigen::MatrixXd::Zero(nb_src, dim);
-//    int iter = 0;
-//    double ntol = tol + 10;
-//    double loss = 1;
-//
-//    Eigen::MatrixXd T = src, F = tar;
-//    Eigen::MatrixXd FT = tar.transpose();
-//    Eigen::MatrixXd FF = (FT.array() * FT.array()).colwise().sum();
-//
-//    Eigen::MatrixXd alpha = Eigen::MatrixXd::Ones(1, nb_src);
-//
-//    Eigen::MatrixXd onesUy = Eigen::MatrixXd::Ones(nb_src, 1);
-//
-//    Eigen::MatrixXd onesUx = Eigen::MatrixXd::Ones(nb_tar, 1);
-//
-//    Eigen::MatrixXd ident_matrix = Eigen::MatrixXd::Identity(c, c);
-//
-//    double eps = 1e-10;
-//
-//    while((ntol > tol) && (iter < max_num_iter) && (sigma2 > 1e-8)) {
-//        Eigen::MatrixXd tmp;
-//        sqdist2(FF, FT, T, tmp);
-//        Eigen::MatrixXd fuzzy_dis = (-tmp / (sigma2 * beta)).array().exp() * alpha.array();
-//    }
-//
-//}
+#include <mkl.h>
 int main() {
-//    int max_threads = omp_get_max_threads();
-//    std::cout << max_threads << std::endl;
-//    Eigen::setNbThreads(max_threads);
-    omp_set_num_threads(20);
-//    mkl_set_num_threads(10);
-    Eigen::MatrixXd  b, res1, res2;
-    Eigen::RowVectorXd a;
-    a.resize(2);
-//    a << 1,2,3,6,5,4;
-//    b.resize(2,3);
-//    b << 3,2,1,4,5,6;
-//    sqdist_omp(a, b ,res1);
-////    pdist_cityblock_omp(a, a, res1);
-//    std::cout << res1 << std::endl;
-//    return 0;
-//    return 0;
-//    a << 1,2;
-//    b.resize(2, 2);
-//    b << 2,2,2,1;
-//    Eigen::RowVectorXd c = b.rowwise().sum().array().inverse();
-//    std::cout << c << std::endl;
-//    return 0;
-//    b = b.array().exp().rowwise() * a.array();
-////    double s = b.sum() ;
-//    std::cout << b <<std::endl;
-////    std::cout << s <<std::endl;
-//    return 0;
+    int max_threads = omp_get_max_threads();
+    std::cout << max_threads << std::endl;
+//    max_threads = 10;
+    Eigen::setNbThreads(max_threads);
+    Eigen::initParallel();
 
-//    std::cout << b.diagonal() << std::endl;
-//    return 0;
-//    Eigen::MatrixXd ss;
-//    sqdist(a, b, ss);
-//    std::cout << ss << std::endl;
-//    return 0;
+
+    omp_set_num_threads(max_threads);
+//    mkl_set_num_threads(10);
     std::string src_path = "../data/tr_reg_059.ply";
     std::string tar_path = "../data/tr_reg_057.ply";
     Eigen::MatrixXd src_points;
@@ -111,11 +31,6 @@ int main() {
 
     Base::PointSet src(src_points);
     Base::PointSet tar(tar_points);
-//    std::cout << src.scale_ << std::endl;
-//    std::cout << src.centroid_ << std::endl;
-//    IO::write_3D_points("../src1.ply", src_points);
-//    IO::write_3D_points("../tar.ply", tar.points_);
-//    return 0;
     Eigen::RowVectorXd alpha;
     Base::PointSet res;
 
@@ -125,37 +40,5 @@ int main() {
     std::chrono::duration<double> duration = end - start;
     std::cout << "fuzzy_cluster_reg time: " << duration.count() << " s" << std::endl;
     IO::write_3D_points("../out.ply", res.points_);
-//    Eigen::MatrixXd tar(1, 3);
-//    tar <<  1,2,3;
-////    fuzzy_cluster_reg(src, tar);
-////    eff_kmeans(src, 2, 5);
-//    Eigen::MatrixXd res;
-////    igl::repmat(tar, 1, 3, res);
-//
-//    std::cout << tar.array().exp() << std::endl;
-//    sqdist(tar, src, res);
-
-//    std::cout << res << std::endl;
-//    Eigen::VectorXi d(3);
-//    d << 1,2,1;
-//    Eigen::VectorXi I;
-//    std:: cout << (d.array() == 1)<< std::endl;
-////    igl::find_zero(d.array() == 1, )
-//    igl::find(d.array() == 1, I);
-
-
-//    Eigen::VectorXd idx(5);
-//    idx << 1, 2, 1, 3, 1;
-//    double j = 1; // Value to find
-//
-//    Eigen::VectorXi indices;
-////    Eigen::VectorXi tmp = (idx.array() == j).array();
-//    igl::find((idx.array() == j).eval(), indices);
-//
-//    // Print the indices
-//    std::cout << "Indices where idx == j:" << std::endl;
-//    for (int i = 0; i < indices.size(); ++i) {
-//        std::cout << indices(i) << " ";
-//    }
     return 0;
 }
