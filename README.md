@@ -51,7 +51,7 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 Except for Intel-MKL, we recommend using vcpkg to install dependent libraries.
 ```shell
 # Eigen3
-vcpkg install Eigen:x64-windwos
+vcpkg install Eigen3:x64-windwos
 # libigl
 vcpkg install libigl:x64-windows
 # cli11
@@ -78,6 +78,9 @@ Making sure that your `Toolchains` is set to `Visual Stdio` and `Architecture` i
 Finlly, Reload CMake via `File->Reload CMake Project` and build our code.
 
 If any problem, please contact us via <migyangz@gmail.com> or <xiaowuga@gmail.com>.
+
+### Todo 
+A GPU accelerated C++ code version is coming soon !
 
 ## Citation
 Please consider citing our work if you find it useful:
