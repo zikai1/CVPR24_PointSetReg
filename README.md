@@ -77,6 +77,7 @@ Making sure that your `Toolchains` is set to `Visual Stdio` and `Architecture` i
 
 Finlly, Reload CMake via `File->Reload CMake Project` and build our code.
 
+If any problem, please contact us via <migyangz@gmail.com> or <xiaowuga@gmail.com>.
 
 ## Citation
 Please consider citing our work if you find it useful:
