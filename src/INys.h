@@ -54,16 +54,9 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     Eigen::MatrixXd center;
 
 
-    auto start = std::chrono::high_resolution_clock::now();
     elkan_kmeans(data, 5, idx, center, m);
 //    kmeans(data, 5, idx, center, m);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "elkan_kmeans time: " << duration.count() << " s" << std::endl;
-//    for(int i = 0; i < m; i++) {
-//        std::cout << center.row(i) << std::endl;
-//    }
-    IO::write_3D_points("../center.ply", center);
+
     Eigen::MatrixXd W, E;
 
     if(kernel.type_ == "rbf_l1") {
@@ -75,17 +68,11 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     }
 
 
-    start = std::chrono::high_resolution_clock::now();
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigensolver(W);
     if (eigensolver.info() != Eigen::Success) {
         std::cerr << "EigenSolver failed" << std::endl;
         return;
     }
-    end = std::chrono::high_resolution_clock::now();
-    duration = end - start;
-    std::cout << "EigenSolver time: " << duration.count() << " s" << std::endl;
-
-
 
     Eigen::VectorXd va = eigensolver.eigenvalues().real();
     Eigen::MatrixXd ve = eigensolver.eigenvectors().real();
@@ -94,9 +81,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     Eigen::VectorXi pidx;
 
     igl::find((va.array() > 1e-6).eval(), pidx);
-//    for(int i = 0; i < va.size(); i++) {
-//        std::cout << va[i] << std::endl;
-//    }
+
     int nb_pidx = pidx.size();
     std::vector<Eigen::Triplet<double>> triplets(nb_pidx);
     Eigen::SparseMatrix<double> inVa(nb_pidx, nb_pidx);
@@ -107,12 +92,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
     }
     inVa.setFromTriplets(triplets.begin(),triplets.end());
 
-    start = std::chrono::high_resolution_clock::now();
-
     G = (E * ve(Eigen::all, pidx) * inVa);
-    end = std::chrono::high_resolution_clock::now();
-    duration = end - start;
-    std::cout << "Easd time: " << duration.count() << " s" << std::endl;
 }
 
 #endif //FUZZYNONRIGID_INYS_H

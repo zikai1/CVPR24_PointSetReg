@@ -13,15 +13,15 @@
 
 #include <mkl.h>
 int main() {
-    int max_threads = omp_get_max_threads();
-    std::cout << max_threads << std::endl;
+    int threads = 25;
+//    std::cout << threads << std::endl;
 //    max_threads = 10;
-    Eigen::setNbThreads(max_threads);
+    Eigen::setNbThreads(threads);
     Eigen::initParallel();
 
 
-    omp_set_num_threads(max_threads);
-//    mkl_set_num_threads(10);
+    omp_set_num_threads(threads);
+    mkl_set_num_threads(threads);
     std::string src_path = "../data/tr_reg_059.ply";
     std::string tar_path = "../data/tr_reg_057.ply";
     Eigen::MatrixXd src_points;
@@ -39,6 +39,6 @@ int main() {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "fuzzy_cluster_reg time: " << duration.count() << " s" << std::endl;
-    IO::write_3D_points("../out.ply", res.points_);
+    IO::write_3D_points("../res.ply", res.points_);
     return 0;
 }

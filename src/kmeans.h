@@ -43,7 +43,7 @@ void sqdist_matrix(Eigen::MatrixXd& a,Eigen::MatrixXd& b,
 void sqdist_omp(Eigen::MatrixXd& a,Eigen::MatrixXd& b,
                    Eigen::MatrixXd& res) {
     int n = a.rows(), m = b.rows();
-    res.resize(n, m);
+//    res.resize(n, m);
     #pragma omp parallel for collapse(2)
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < m; j++) {
@@ -59,14 +59,11 @@ void kmeans(Eigen::MatrixXd& data, int max_iter,
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine rng(seed);
     igl::randperm(num, dex, rng);
-//    for(int i = 0; i < m; i++) {
-//        std::cout << dex[i] << std::endl;
-//    }
     center = data(dex.segment(0, m), Eigen::all);
+    Eigen::MatrixXd tmp(center.rows(), data.cols());
 //    std::cout << max_iter << std::endl;
     for(int i = 0; i < max_iter; i++) {
         Eigen::VectorXd ct = Eigen::VectorXd::Zero(m);
-        Eigen::MatrixXd tmp;
         sqdist_omp(center, data, tmp);
         Eigen::VectorXd minn;
         igl::min(tmp, 1, minn, idx);
