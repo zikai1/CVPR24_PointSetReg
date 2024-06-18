@@ -77,7 +77,8 @@ Making sure that your `Toolchains` is set to `Visual Stdio` and `Architecture` i
 
 Finlly, Reload CMake via `File->Reload CMake Project` and build our code.
 
-If any problem, please contact us via <migyangz@gmail.com> or <xiaowuga@gmail.com>.
+## Contact 
+If you have any problem, please contact us via <migyangz@gmail.com> or <xiaowuga@gmail.com>. We greatly appreciate everyone's feedback and insights. Please do not hesitate to get in touch!
 
 ### Todo 
 A GPU accelerated C++ code version is coming soon !
