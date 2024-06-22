@@ -17,7 +17,7 @@
   </p>
 
 
-
+### [Project Page](https://zikai1.github.io/pub/CluReg/index.html) | [Paper](https://arxiv.org/abs/2304.02626) | [Poster](https://zikai1.github.io/slides/CVPR24_Creg_poster.pdf)
 
 <!--<font size=15> Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (Highlight) <font size=15>-->
 
@@ -118,6 +118,8 @@ Please consider citing our work if you find it useful:
 }
 ```
 
+## Licence
+CluReg is under AGPL-3.0, so any downstream solution and products (including cloud services) that include CluReg code inside it should be open-sourced to comply with the AGPL conditions. For learning purposes only and not for commercial use. If you want to use it for commercial purposes, please contact us first.
 
 
 ## Acknowledgements
