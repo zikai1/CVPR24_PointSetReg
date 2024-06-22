@@ -1,7 +1,16 @@
 /*
-* Paper:Correspondence-Free Non-Rigid Point Set Registration Using Unsupervised Clustering Analysis, CVPR 2024
-* Mingyang Zhao & Jingen Jiang
-* Initialized on May 27th, 2024, Hong Kong
+Copyright (C) 2024  Mingyang Zhao & Jingen Jiang
+https://zikai1.github.io/ - migyangz@gmail.com
+https://xiaowuga.github.io/ - xiaowuga@gmail.com
+
+The code is the official implementation of our CVPR 2024 paper
+"Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis"
+
+Our code is under AGPL-3.0, so any downstream solution and products (including cloud services) that
+include our code inside it should be open-sourced to comply with the AGPL conditions. For learning
+purposes only and not for commercial use.
+
+If you want to use it for commercial purposes, please contact us first.
 */
 
 #include "base.h"
