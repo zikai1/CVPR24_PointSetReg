@@ -48,6 +48,13 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 - Intel(R) Core i9-13900K
 - NVIDIA RTX 4090
 ### Dependence
+
+The dependent libraries of our code includes:
+- Eigen3 (3.4.0 or later)
+- libigl (2.5.0 or later)
+- cli11 (2.4.0 or later), command line.
+- Intel-MKL (version 2024.1.0 or later), matrix operation acceleration
+
 Except for Intel-MKL, we recommend using vcpkg to install dependent libraries.
 ```shell
 # Eigen3
@@ -58,7 +65,7 @@ vcpkg install libigl:x64-windows
 vcpkg install cli11:x64-windows
 ```
 For Intel-MKL, we recommend using the official [installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) for installation.
-```shell
+```
 # Set ${MKL_DIR} in your system/user environment variable
 MKL_DIR = ${YOUR_MKL_INSTALL_PATH}/oneAPI/mkl/latest/lib/cmake
 # Add following path to your system/user ${Path} environment variable
@@ -69,13 +76,29 @@ ${YOUR_MKL_INSTALL_PATH}/oneAPI/compiler/latest/bin
 ### How to build 
 
 Building our code in CLion:
-```shell
+```
 # File -> Setting -> Build, Execution, Deployment -> CMake -> CMake Option :
 -DCMAKE_TOOLCHAIN_FILE=${YOUR_VCPKG_INSTALL_PATH}/scripts/buildsystems/vcpkg.cmake
 ```
-Making sure that your `Toolchains` is set to `Visual Stdio` and `Architecture` is set to `amd64`.
+Making sure that your following settings are correct:
+- Toolchains : `Visual Stdio`
+- Architecture : `amd64`
+- Build Type : `release`
 
-Finlly, Reload CMake via `File->Reload CMake Project` and build our code.
+### Usage
+
+The program is run with four input parameters:
+```
+.CluReg.exe -s <src_path> -t <tar_path> -o <out_path>
+```
+
+- `<src_path>`: an input file storing the source point cloud;
+
+- `<tarFile>`: an input file storing the target  point cloud;
+
+- `<out_path>`: an output file storing the path of registered point cloud;
+
+
 
 ## Contact 
 If you have any problem, please contact us via <migyangz@gmail.com> or <xiaowuga@gmail.com>. We greatly appreciate everyone's feedback and insights. Please do not hesitate to get in touch!

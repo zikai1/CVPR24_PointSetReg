@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <CLI/CLI.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
@@ -12,22 +12,35 @@
 #include <chrono>
 
 #include <mkl.h>
-int main() {
-    int threads = 25;
-//    std::cout << threads << std::endl;
+int main(int argc, char **argv) {
+    struct {
+        std::string src_path;
+        std::string tar_path;
+        std::string out_path;
+    } args;
+
+    int threads = omp_get_max_threads();;
+    std::cout <<"maximal thread number = " << threads << std::endl;
 //    max_threads = 10;
     Eigen::setNbThreads(threads);
     Eigen::initParallel();
-
-
     omp_set_num_threads(threads);
     mkl_set_num_threads(threads);
-    std::string src_path = "../data/tr_reg_059.ply";
-    std::string tar_path = "../data/tr_reg_057.ply";
+
+
+    CLI::App app{"CluReg Command Line"};
+
+    app.add_option("-s,--src_path", args.src_path, "Source Point Set")->required();
+    app.add_option("-t,--tar_path", args.tar_path, "Target Point Set")->required();
+    app.add_option("-o,--out_path", args.out_path, "Output Point Set")->required();
+
+    CLI11_PARSE(app, argc, argv);
+    // std::string src_path = "../data/tr_reg_059.ply";
+    // std::string tar_path = "../data/tr_reg_057.ply";
     Eigen::MatrixXd src_points;
     Eigen::MatrixXd tar_points;
-    IO::read_3D_points(src_path, src_points);
-    IO::read_3D_points(tar_path, tar_points);
+    IO::read_3D_points(args.src_path, src_points);
+    IO::read_3D_points(args.tar_path, tar_points);
 
     Base::PointSet src(src_points);
     Base::PointSet tar(tar_points);
@@ -39,6 +52,6 @@ int main() {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "fuzzy_cluster_reg time: " << duration.count() << " s" << std::endl;
-    IO::write_3D_points("../res.ply", res.points_);
+    IO::write_3D_points(args.out_path, res.points_);
     return 0;
 }
