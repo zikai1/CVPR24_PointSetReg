@@ -116,7 +116,7 @@ Please consider citing our work if you find it useful:
 }
 ```
 
-## Licence
+## License
 CluReg is under AGPL-3.0, so any downstream solution and products (including cloud services) that include CluReg code inside it should be open-sourced to comply with the AGPL conditions. For learning purposes only and not for commercial use. If you want to use it for commercial purposes, please contact us first.
 
 
