@@ -52,7 +52,6 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 
 The dependent libraries of our code includes:
 - Eigen3 (3.4.0 or later)
-- libigl (2.5.0 or later)
 - cli11 (2.4.0 or later), command line.
 - Intel-MKL (version 2024.1.0 or later), matrix operation acceleration
 
@@ -60,8 +59,6 @@ Except for Intel-MKL, we recommend using vcpkg to install dependent libraries.
 ```shell
 # Eigen3
 vcpkg install Eigen3:x64-windwos
-# libigl
-vcpkg install libigl:x64-windows
 # cli11
 vcpkg install cli11:x64-windows
 ```
