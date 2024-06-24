@@ -14,7 +14,7 @@ If you want to use it for commercial purposes, please contact us first.
 */
 
 #include "base.h"
-
+#include "INys.h"
 #ifndef FUZZYNONRIGID_FUZZY_CLUSTER_REG_H
 #define FUZZYNONRIGID_FUZZY_CLUSTER_REG_H
 

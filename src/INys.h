@@ -23,11 +23,8 @@ If you want to use it for commercial purposes, please contact us first.
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
-//#include <MatlabEngine.hpp>
-//#include <MatlabDataArray.hpp>
-
 #include <Eigen/Eigenvalues>
-
+#include <Eigen/Sparse>
 
 
 void pdist_cityblock_omp(const Eigen::MatrixXd& a, const Eigen::MatrixXd& b, Eigen::MatrixXd& res){
@@ -53,8 +50,16 @@ void pdist2_cityblock_matrix(const Eigen::MatrixXd& a, const Eigen::MatrixXd& b,
     res = (a_repeated - b_repeated).cwiseAbs().rowwise().sum().reshaped(n, m);
 }
 
-
-
+void find_greater(const Eigen::VectorXd& data, Eigen::VectorXi& idx, double val) {
+    int len = data.size(), ct = 0;
+    idx.resize(len);
+    for(int i = 0; i < len; i++) {
+        if(data[i] > val) {
+            idx[ct++] = i;
+        }
+    }
+    idx.conservativeResize(ct);
+}
 
 void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
                                              Eigen::MatrixXd& data,
@@ -66,7 +71,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
 
 
     elkan_kmeans(data, 5, idx, center, m);
-//    kmeans(data, 5, idx, center, m);
+    // kmeans(data, 5, idx, center, m);
 
     Eigen::MatrixXd W, E;
 
@@ -91,8 +96,7 @@ void improved_nystrom_low_rank_approximation(Base::Kernel& kernel,
 
     Eigen::VectorXi pidx;
 
-    igl::find((va.array() > 1e-6).eval(), pidx);
-
+    find_greater(va, pidx, 1e-6);
     int nb_pidx = pidx.size();
     std::vector<Eigen::Triplet<double>> triplets(nb_pidx);
     Eigen::SparseMatrix<double> inVa(nb_pidx, nb_pidx);

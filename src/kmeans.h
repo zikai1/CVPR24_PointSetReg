@@ -16,40 +16,10 @@ If you want to use it for commercial purposes, please contact us first.
 #ifndef FUZZYNONRIGID_KMEANS_H
 #define FUZZYNONRIGID_KMEANS_H
 
-#include <igl/randperm.h>
-#include <igl/repmat.h>
-#include <igl/find.h>
-#include <igl/min.h>
-#include <unsupported/Eigen/KroneckerProduct>
 #include <omp.h>
 #include <chrono>
+#include <random>
 
-
-void sqdist2(Eigen::MatrixXd& aa, Eigen::MatrixXd& a, Eigen::MatrixXd& b,
-            Eigen::MatrixXd& res) {
-    int a_col = a.cols(), b_col = b.cols();
-    Eigen::MatrixXd bb = (b.array() * b.array()).colwise().sum();
-    Eigen::MatrixXd ab = a.transpose() * b;
-    Eigen::MatrixXd tmp1, tmp2;
-    Eigen::MatrixXd aat = aa.transpose();
-    igl::repmat(aat, 1, b_col, tmp1);
-    igl::repmat(bb, a_col, 1, tmp2);
-    res = (tmp1 + tmp2 - 2 * ab).array().abs();
-}
-
-void sqdist_matrix(Eigen::MatrixXd& a,Eigen::MatrixXd& b,
-            Eigen::MatrixXd& res) {
-//    auto start = std::chrono::high_resolution_clock::now();
-    Eigen::MatrixXd at = a.transpose();
-    Eigen::MatrixXd bt = b.transpose();
-    Eigen::MatrixXd a2 = (at.array() * at.array()).colwise().sum();
-    Eigen::MatrixXd b2 = (bt.array() * bt.array()).colwise().sum();
-    Eigen::MatrixXd ab = a * bt;
-    Eigen::MatrixXd tmp1, tmp2;
-    igl::repmat(a2.transpose(), 1, b2.cols(), tmp1);
-    igl::repmat(b2, a2.cols(), 1, tmp2);
-    res = (tmp1 + tmp2 - 2 * ab).array().abs();
-}
 
 void sqdist_omp(Eigen::MatrixXd& a,Eigen::MatrixXd& b,
                    Eigen::MatrixXd& res) {
@@ -63,21 +33,46 @@ void sqdist_omp(Eigen::MatrixXd& a,Eigen::MatrixXd& b,
     }
 }
 
+void randperm(Eigen::VectorXi& dex, int a, int b) {
+    int n = b - a;
+    dex.resize(n);
+    std::iota(dex.data(), dex.data() + n, a);
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine rng(seed);
+    std::shuffle(dex.data(),dex.data()+n, rng);
+}
+
 void kmeans(Eigen::MatrixXd& data, int max_iter,
                 Eigen::VectorXi& idx, Eigen::MatrixXd& center, int& m) {
     size_t num = data.rows(), dim = data.cols();
     Eigen::VectorXi dex;
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine rng(seed);
-    igl::randperm(num, dex, rng);
+    // igl::randperm(num, dex, rng);
+    randperm(dex, 0, num);
+
     center = data(dex.segment(0, m), Eigen::all);
     Eigen::MatrixXd tmp(center.rows(), data.cols());
-//    std::cout << max_iter << std::endl;
+
+
     for(int i = 0; i < max_iter; i++) {
         Eigen::VectorXd ct = Eigen::VectorXd::Zero(m);
+        tmp.resize(center.rows(), data.rows());
         sqdist_omp(center, data, tmp);
-        Eigen::VectorXd minn;
-        igl::min(tmp, 1, minn, idx);
+
+        std::vector<double> min_values(tmp.cols(), std::numeric_limits<double>::max());
+        idx.resize(tmp.cols());
+
+        #pragma omp parallel for
+        for(int j = 0; j < tmp.cols(); j++) {
+            for(int k = 0; k < tmp.rows(); k++) {
+                if(min_values[j] > tmp(k, j)) {
+                    min_values[j] = tmp(k, j);
+                    idx[j] = k;
+                }
+            }
+        }
+
         center.setZero();
         #pragma omp parallel for
         for(int j = 0; j < num ; j++) {
@@ -100,9 +95,8 @@ void elkan_kmeans(Eigen::MatrixXd& data, int max_iter,
             Eigen::VectorXi& idx, Eigen::MatrixXd& center, int& m) {
     size_t num = data.rows(), dim = data.cols();
     Eigen::VectorXi dex;
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine rng(seed);
-    igl::randperm(num, dex);
+
+    randperm(dex, 0, num);
     center = data(dex.segment(0, m), Eigen::all);
     Eigen::VectorXd tmp(m);
     idx.resize(num);
