@@ -55,7 +55,7 @@ The dependent libraries of our code includes:
 - cli11 (2.4.0 or later), command line.
 - Intel-MKL (version 2024.1.0 or later), matrix operation acceleration
 
-Except for Intel-MKL, we recommend using vcpkg to install dependent libraries.
+Except for Intel-MKL, we recommend using [vcpkg](https://github.com/microsoft/vcpkg) to install dependent libraries.
 ```shell
 # Eigen3
 vcpkg install Eigen3:x64-windwos
