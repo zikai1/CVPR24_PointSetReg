@@ -1,6 +1,6 @@
 <p align="center">
   <p align="center">
-    <h1 align="center">Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (Highlight)</h1>
+    <h1 align="center">Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (CVPR 2024 Highlight)</h1>
   </p>
   <p align="center" style="font-size:16px">
     <a target="_blank" href="https://zikai1.github.io/"><strong>Mingyang Zhao</strong></a>
@@ -22,7 +22,7 @@
 <!--<font size=15> Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (Highlight) <font size=15>-->
 
 ![](./fig/CVPR_Teaser.jpg)
-### [Project Page](https://zikai1.github.io/pub/CluReg/index.html) | [Paper](https://arxiv.org/abs/2304.02626) | [Poster](https://zikai1.github.io/slides/CVPR24_Creg_poster.pdf)
+### [Project Page](https://zikai1.github.io/pub/CluReg/index.html) | [Paper](https://arxiv.org/abs/2406.18817) | [Poster](https://zikai1.github.io/slides/CVPR24_Creg_poster.pdf)
 This repository contains the official implementation of our CVPR 2024 paper "Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis". 
 
 ## Motivation
