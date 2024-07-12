@@ -1,6 +1,6 @@
 <p align="center">
   <p align="center">
-    <h1 align="center">Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (CVPR 2024 Highlight)</h1>
+    <h1 align="center">Correspondence-Free Nonrigid Point Set Registration Using Unsupervised Clustering Analysis (CVPR 2024)</h1>
   </p>
   <p align="center" style="font-size:16px">
     <a target="_blank" href="https://zikai1.github.io/"><strong>Mingyang Zhao</strong></a>
