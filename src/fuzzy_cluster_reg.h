@@ -31,7 +31,7 @@ void compute_fuzzy_dis_omp(Eigen::MatrixXd& fuzzy_dis, Eigen::RowVectorXd& alpha
 
 void compute_sum_fuzzy_dist_omp(Eigen::MatrixXd& fuzzy_dis, Eigen::VectorXd& sum_fuzzy_dist) {
     int n = fuzzy_dis.rows(), m = fuzzy_dis.cols();
-//    sum_fuzzy_dist.resize(n);
+    sum_fuzzy_dist.resize(n);
 #pragma omp parallel for collapse(2)
     for(int i = 0; i < n; i++) {
         sum_fuzzy_dist[i] = 0.0;

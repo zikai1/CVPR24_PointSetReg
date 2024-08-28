@@ -94,7 +94,7 @@ The program is run with four input parameters:
 
 - `<src_path>`: an input file storing the source point cloud;
 
-- `<tarFile>`: an input file storing the target  point cloud;
+- `<tar_file>`: an input file storing the target  point cloud;
 
 - `<out_path>`: an output file storing the path of registered point cloud;
 
