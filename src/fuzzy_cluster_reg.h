@@ -164,7 +164,10 @@ void fuzzy_cluster_reg(Base::PointSet& src, Base::PointSet& tar,
         iter++;
     }
 
+    T = T * tar.scale_;
+    T.array().rowwise() += tar.centroid_.transpose().array();
     res.set_points(T, false);
+
 }
 
 #endif //FUZZYNONRIGID_FUZZY_CLUSTER_REG_H
