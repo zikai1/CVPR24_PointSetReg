@@ -18,6 +18,7 @@ function G = INys(kernel,data, m, s)
 
 if(s == 'k')
     [~, center, m] = eff_kmeans(data, m, 5); %#iteration is restricted to 5
+    % [~, center, m] = elkan_kmeans(data, m, 5); %#iteration is restricted to 5
 end
 
 if(s == 'r')
