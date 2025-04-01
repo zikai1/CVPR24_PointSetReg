@@ -17,8 +17,8 @@ function [alpha,T]=fuzzy_cluster_reg(src_pt, tgt_pt)
 
 [Nc,~]=size(src_pt); 
 [Np,D]=size(tgt_pt); 
-% NpD=gpuArray(Np*D);
-NpD = Np*D;
+NpD=gpuArray(Np*D);
+
 
 % Merge centroids between the both point sets first
 src_pt_center=mean(src_pt,1);
@@ -45,7 +45,7 @@ fprintf('Elapsed time is %.2f seconds.\n', elapsedTime);
 
 % Parameter initialization 
 W=zeros(Nc,D);
-% W=gpuArray((W));
+W=gpuArray((W));
 
 iter=0;
 tol=1e-5;
@@ -67,13 +67,13 @@ lambda=0.1;% 0.1 in default
 
 alpha=ones(1,Nc);
 
-% alpha=gpuArray((alpha));
+alpha=gpuArray((alpha));
 onesUy=ones(Nc,1);
-% onesUy=gpuArray((onesUy));
+onesUy=gpuArray((onesUy));
 onesUx=ones(Np,1);
-% onesUx=gpuArray((onesUx));
+onesUx=gpuArray((onesUx));
 IdentMatrix=eye(c);
-% IdentMatrix=gpuArray((IdentMatrix));
+IdentMatrix=gpuArray((IdentMatrix));
 
 viz=1;
 NEAR_0=1e-10; % avoid logx->-inf and NaN 
@@ -87,7 +87,7 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
     QtW=Q'*W;
     
     %Acceleration by pre-computing FF,Np,Nc,FT    
-    fuzzy_dist=exp(-sqdist2(FF,Np,Nc,FT,T')/(sigma2*beta)).*alpha;% beta设置较小数，收敛更快，效果更好
+    fuzzy_dist=exp(-sqdist2(FF,Np,Nc,FT,T')/(sigma2*beta)).*alpha;% lower beta generally leads to faster convergence and better effect. 
     disp(fuzzy_dist(1,1));
     sum_fuzzy_dist=1./(sum(fuzzy_dist,2));% sum over the same centroid
     U=fuzzy_dist.*sum_fuzzy_dist; % sum(U,2)=1,construct fuzzy partition matrix
@@ -156,7 +156,7 @@ while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
   
 end
 elapsedTime = toc;
-fprintf('time: %.5f 秒\n', elapsedTime);
+fprintf('time: %.5f s\n', elapsedTime);
 
 
 
