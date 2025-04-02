@@ -78,7 +78,7 @@ IdentMatrix=gpuArray((IdentMatrix));
 viz=1;
 NEAR_0=1e-10; % avoid logx->-inf and NaN 
 
-figure;
+%figure;
 tic;
 while (ntol>tol)&&(iter<maxNumIter)&&(sigma2>1e-8)
     
