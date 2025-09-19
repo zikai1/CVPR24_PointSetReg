@@ -43,6 +43,27 @@ Non-rigid point set registration is to optimize a non-linear displacement field 
 ```
   
 
+## Python
+
+Create a virtual environment:
+
+```bash
+virtualenv env
+source env/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install open3d numpy scipy scikit-learn
+```
+
+Run demo:
+
+```bash
+python3 demo.py
+```
+
 
 ## C++
 ### Platform
