@@ -89,8 +89,6 @@ def fuzzy_cluster_reg(
         - 2 * np.sum(src_pt, axis=0) @ np.sum(tgt_pt, axis=0).T
     ) / (D * Nc * Np)
 
-    # Compute the Gramm matrix and low-rank decomposision by the improved Nystrom
-    theta = 0.5
     # Number of landmark points, the larger the slower but more accurate
     m = int(np.ceil(0.3 * Nc))
 
@@ -117,8 +115,8 @@ def fuzzy_cluster_reg(
         QtW = Q.T @ W
 
         fuzzy_dist = np.exp(-pdist2(F, T, "sqeuclidean") / (sigma2 * beta)) * alpha
-        sum_fuzzy_dist = 1.0 / (np.sum(fuzzy_dist, axis=1))
-        U = fuzzy_dist * sum_fuzzy_dist[:, np.newaxis] + epsilon
+        sum_fuzzy_dist = np.sum(fuzzy_dist, axis=1)
+        U = fuzzy_dist / sum_fuzzy_dist[:, np.newaxis] + epsilon
 
         U1 = U @ onesUy
         Ut1 = U.T @ onesUx
@@ -129,8 +127,7 @@ def fuzzy_cluster_reg(
 
         P = Uttgt - dUt @ src_pt
         A = _lambda * sigma2 * np.eye(Q.shape[1]) + Q.T @ dUtQ
-
-        W = 1.0 / (_lambda * sigma2) * (P - dUtQ @ (np.linalg.inv(A) @ (Q.T @ P)))
+        W = (P - dUtQ @ (np.linalg.inv(A) @ (Q.T @ P))) / (_lambda * sigma2)
 
         wdist_pt2center = np.abs(
             np.trace(F.T @ dU @ F + T.T @ dUt @ T - 2 * Uttgt.T @ T)
@@ -142,7 +139,7 @@ def fuzzy_cluster_reg(
         KL_U_alpha = H_U - H_alpha
 
         Loss = (
-            (1.0 / sigma2) * wdist_pt2center
+            wdist_pt2center / sigma2
             + NpD * np.log(sigma2)
             + 0.5 * _lambda * np.trace(QtW.T @ QtW)
             + beta * KL_U_alpha

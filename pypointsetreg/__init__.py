@@ -1,1 +1,2 @@
 from .fuzzyclusterreg import fuzzy_cluster_reg
+from .fuzzyclusterreg_gpu import fuzzy_cluster_reg_gpu

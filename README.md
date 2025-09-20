@@ -55,13 +55,24 @@ source env/bin/activate
 Install dependencies:
 
 ```bash
-pip install open3d numpy scipy scikit-learn
+pip install open3d numpy scipy scikit-learn click
+```
+
+For GPU support, install cupy (change `cu13x` to your respective cuda version):
+
+```bash
+pip install cupy-cuda-cu13x
 ```
 
 Run demo:
 
 ```bash
 python3 demo.py
+```
+
+with GPU support:
+```bash
+python3 demo.py --gpu
 ```
 
 
